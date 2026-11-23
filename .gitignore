@@ -1,0 +1,60 @@
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Large Datasets & Raw Audit Logs (Strictly Excluded)
+*.csv
+*.tsv
+*.parquet
+r4.2/
+r5.2/
+r6.2/
+answers/
+answers.tar.bz2
+extraction_cache/
+ExtractedData/
+eda/
+catboost_info/
+
+# Model Weights (>50MB / binary files)
+*.joblib
+*.cbm
+*.pkl
+*.h5
+*.onnx
+
+# Allow Essential Metadata & Metrics
+!**/models/results_log.json
+!**/prepared_data/selected_features.json
+!**/prepared_data/feature_rankings_all.csv
+!**/session_columns.json
+
+# Node.js & Frontend Build Outputs
+**/node_modules/
+**/.next/
+**/out/
+**/build/
+**/dist/
+.pnp
+.pnp.js
+
+# Env & Sensitive Credentials
+.env*
+*.pem
+*.key
+*.token
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo

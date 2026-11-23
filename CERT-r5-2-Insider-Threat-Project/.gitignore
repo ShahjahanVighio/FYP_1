@@ -1,0 +1,34 @@
+﻿# Python artifacts
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Large Datasets & Extracted Sessions
+r5.2/
+answers/
+answers.tar.bz2
+extraction_cache/
+ExtractedData/
+catboost_info/
+*.csv
+*.parquet
+
+# Model Weights (>50MB / binary weights)
+models/*.joblib
+models/*.cbm
+!models/results_log.json
+
+# Retain metadata and rankings
+!prepared_data/selected_features.json
+!prepared_data/feature_rankings_all.csv
+
+# Environments & IDE
+.idea/
+.vscode/
+*.swp
+*.swo
