@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ShieldAlert, BarChart3, GitFork, Cpu, Sliders, Database, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useDataset } from "@/context/DatasetContext";
 
 const NAV_ITEMS = [
   { name: "Overview", href: "/", icon: BarChart3 },
@@ -15,7 +16,7 @@ const NAV_ITEMS = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [selectedDataset, setSelectedDataset] = useState<"r4.2" | "r5.2">("r4.2");
+  const { dataset: selectedDataset, setDataset } = useDataset();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
@@ -67,10 +68,10 @@ export default function Navbar() {
         <div className="relative">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-slate-600 text-xs text-slate-300 transition-colors"
+            className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-slate-600 text-xs text-slate-300 transition-colors cursor-pointer"
           >
             <Database className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="font-medium">
+            <span className="font-semibold text-slate-200">
               {selectedDataset === "r4.2" ? "CMU CERT r4.2" : "CMU CERT r5.2"}
             </span>
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -78,41 +79,53 @@ export default function Navbar() {
           </button>
 
           {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-56 rounded-xl bg-slate-900 border border-slate-700 shadow-xl py-1 z-50 text-xs">
+            <div className="absolute right-0 mt-2 w-64 rounded-xl bg-slate-900 border border-slate-700 shadow-2xl py-1 z-50 text-xs">
               <button
                 onClick={() => {
-                  setSelectedDataset("r4.2");
+                  setDataset("r4.2");
                   setDropdownOpen(false);
                 }}
-                className={`w-full text-left px-4 py-2.5 flex items-center justify-between hover:bg-slate-800 transition-colors ${
-                  selectedDataset === "r4.2" ? "text-cyan-400 font-semibold bg-cyan-950/20" : "text-slate-300"
+                className={`w-full text-left px-4 py-2.5 flex items-center justify-between hover:bg-slate-800 transition-colors cursor-pointer ${
+                  selectedDataset === "r4.2" ? "text-cyan-400 font-semibold bg-cyan-950/30 border-l-2 border-cyan-400" : "text-slate-300"
                 }`}
               >
                 <div>
-                  <div className="font-medium">CMU CERT r4.2</div>
-                  <div className="text-[10px] text-slate-500">470k sessions · 50 features</div>
+                  <div className="font-medium text-slate-200">CMU CERT r4.2</div>
+                  <div className="text-[10px] text-slate-400">470k sessions · 1,000 employees</div>
                 </div>
-                <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
-                  ACTIVE
-                </span>
+                {selectedDataset === "r4.2" ? (
+                  <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
+                    ACTIVE
+                  </span>
+                ) : (
+                  <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">
+                    SWITCH
+                  </span>
+                )}
               </button>
 
               <button
                 onClick={() => {
-                  setSelectedDataset("r5.2");
+                  setDataset("r5.2");
                   setDropdownOpen(false);
                 }}
-                className={`w-full text-left px-4 py-2.5 flex items-center justify-between hover:bg-slate-800 transition-colors ${
-                  selectedDataset === "r5.2" ? "text-cyan-400 font-semibold bg-cyan-950/20" : "text-slate-300"
+                className={`w-full text-left px-4 py-2.5 flex items-center justify-between hover:bg-slate-800 transition-colors cursor-pointer ${
+                  selectedDataset === "r5.2" ? "text-cyan-400 font-semibold bg-cyan-950/30 border-l-2 border-cyan-400" : "text-slate-300"
                 }`}
               >
                 <div>
-                  <div className="font-medium">CMU CERT r5.2</div>
-                  <div className="text-[10px] text-slate-500">2,000 employees · Extended</div>
+                  <div className="font-medium text-slate-200">CMU CERT r5.2</div>
+                  <div className="text-[10px] text-slate-400">1,004k sessions · 2,000 employees</div>
                 </div>
-                <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">
-                  PLUG-IN READY
-                </span>
+                {selectedDataset === "r5.2" ? (
+                  <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
+                    ACTIVE
+                  </span>
+                ) : (
+                  <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">
+                    SWITCH
+                  </span>
+                )}
               </button>
             </div>
           )}

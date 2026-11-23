@@ -21,10 +21,12 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import data from "@/data/r4_2_metrics.json";
+import { useDataset } from "@/context/DatasetContext";
 
 export default function MethodologyPage() {
+  const { data, dataset } = useDataset();
   const models = data.models;
+  const stats = data.dataset.stats;
 
   // Imbalance comparison data: Cost-Sensitive vs. SMOTE+RUS
   const imbalanceComparison = [
@@ -32,19 +34,19 @@ export default function MethodologyPage() {
       model: "Random Forest",
       "Cost-Sensitive (Raw Train)": Number((models.Random_Forest.cross_validation.cost_sensitive.cv_mean_ap * 100).toFixed(1)),
       "SMOTE + RUS (Resampled)": Number((models.Random_Forest.cross_validation.resampled.cv_mean_ap * 100).toFixed(1)),
-      gain: "+21.5% PR-AUC",
+      gain: `+${((models.Random_Forest.cross_validation.cost_sensitive.cv_mean_ap - models.Random_Forest.cross_validation.resampled.cv_mean_ap) * 100).toFixed(1)}% PR-AUC`,
     },
     {
       model: "XGBoost",
       "Cost-Sensitive (Raw Train)": Number((models.XGBoost.cross_validation.cost_sensitive.cv_mean_ap * 100).toFixed(1)),
       "SMOTE + RUS (Resampled)": Number((models.XGBoost.cross_validation.resampled.cv_mean_ap * 100).toFixed(1)),
-      gain: "+5.96% PR-AUC",
+      gain: `+${((models.XGBoost.cross_validation.cost_sensitive.cv_mean_ap - models.XGBoost.cross_validation.resampled.cv_mean_ap) * 100).toFixed(1)}% PR-AUC`,
     },
     {
       model: "CatBoost",
       "Cost-Sensitive (Raw Train)": Number((models.CatBoost.cross_validation.cost_sensitive.cv_mean_ap * 100).toFixed(1)),
       "SMOTE + RUS (Resampled)": Number((models.CatBoost.cross_validation.resampled.cv_mean_ap * 100).toFixed(1)),
-      gain: "+8.44% PR-AUC",
+      gain: `+${((models.CatBoost.cross_validation.cost_sensitive.cv_mean_ap - models.CatBoost.cross_validation.resampled.cv_mean_ap) * 100).toFixed(1)}% PR-AUC`,
     },
   ];
 
@@ -53,9 +55,9 @@ export default function MethodologyPage() {
       step: "01",
       title: "Multi-Modal Log Ingestion & High-Speed Vectorization",
       icon: Database,
-      badge: "16.5 GB Raw Data",
+      badge: `${stats.raw_log_size_gb} GB Raw Data`,
       description:
-        "Parsed 17 continuous months of heterogeneous audit telemetry across 1,000 corporate employees. Employs streaming DuckDB chunking and vectorized NumPy processors to eliminate memory bottlenecks on Windows.",
+        `Parsed ${stats.duration_months} continuous months of heterogeneous audit telemetry across ${stats.employees.toLocaleString()} corporate employees in CERT ${dataset}. Employs streaming DuckDB chunking and vectorized NumPy processors to eliminate memory bottlenecks on Windows.`,
       bullets: [
         "logon.csv (58.5 MB, 854k rows): Logon/logoff hour distributions, after-hours activity, unauthorized workstation hops.",
         "device.csv (29.0 MB, 405k rows): Removable USB flash drive connection/disconnection events.",

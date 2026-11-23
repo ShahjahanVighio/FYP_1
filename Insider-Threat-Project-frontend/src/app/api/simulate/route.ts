@@ -5,6 +5,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const userFeatures = body.features || {};
+    const dataset = body.dataset === "r5.2" ? "r5.2" : "r4.2";
 
     // 1. First, attempt to query the local Python FastAPI microservice if running on port 8000
     try {
@@ -14,7 +15,7 @@ export async function POST(request: Request) {
       const apiRes = await fetch("http://127.0.0.1:8000/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ features: userFeatures }),
+        body: JSON.stringify({ features: userFeatures, dataset }),
         signal: controller.signal,
       });
 
@@ -93,9 +94,11 @@ export async function POST(request: Request) {
     // Random Forest
     const p_rf = Math.min(1.0, Math.max(0.0001, p_base * 0.88));
 
-    // Stacking Ensemble (0.70 XGB + 0.30 CatBoost)
-    const p_ensemble = Math.min(1.0, Math.max(0.0001, 0.7 * p_xgb + 0.3 * p_cb));
-    const opt_threshold = 0.34;
+    // Stacking Ensemble (r4.2: 0.70 XGB + 0.30 CB, r5.2: 0.55 XGB + 0.45 CB)
+    const p_ensemble = dataset === "r4.2"
+      ? Math.min(1.0, Math.max(0.0001, 0.7 * p_xgb + 0.3 * p_cb))
+      : Math.min(1.0, Math.max(0.0001, 0.55 * p_xgb + 0.45 * p_cb));
+    const opt_threshold = dataset === "r4.2" ? 0.34 : 0.42;
     const is_threat = p_ensemble >= opt_threshold;
 
     let risk_level = "LOW / BENIGN";
@@ -109,7 +112,7 @@ export async function POST(request: Request) {
     } else if (p_ensemble >= opt_threshold) {
       risk_level = "HIGH RISK";
       risk_color = "#F97316"; // orange
-      recommendation = "Optimal threshold exceeded (T* = 0.34). Flag session for tier-2 security analyst audit.";
+      recommendation = `Optimal threshold exceeded (T* = ${opt_threshold}). Flag session for tier-2 security analyst audit.`;
     } else if (p_ensemble >= 0.15) {
       risk_level = "ELEVATED RISK";
       risk_color = "#F59E0B"; // amber
@@ -129,6 +132,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ensemble_threat_probability: Number(p_ensemble.toFixed(4)),
       optimal_threshold: opt_threshold,
+      dataset,
       is_threat,
       risk_level,
       risk_color,
@@ -140,8 +144,8 @@ export async function POST(request: Request) {
       },
       model_weights: {
         random_forest: 0.0,
-        xgboost: 0.7,
-        catboost: 0.3,
+        xgboost: dataset === "r4.2" ? 0.7 : 0.55,
+        catboost: dataset === "r4.2" ? 0.3 : 0.45,
       },
       key_signals,
       source: "calibrated_nextjs_engine",

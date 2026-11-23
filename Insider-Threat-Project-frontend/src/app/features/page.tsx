@@ -19,9 +19,10 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import data from "@/data/r4_2_metrics.json";
+import { useDataset } from "@/context/DatasetContext";
 
 export default function FeaturesPage() {
+  const { data, dataset } = useDataset();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortField, setSortField] = useState<"combined_rank" | "anova_f" | "mi">("combined_rank");

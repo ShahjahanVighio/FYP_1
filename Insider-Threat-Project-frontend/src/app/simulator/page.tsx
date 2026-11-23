@@ -15,7 +15,7 @@ import {
   Layers,
   Sparkles,
 } from "lucide-react";
-import data from "@/data/r4_2_metrics.json";
+import { useDataset } from "@/context/DatasetContext";
 
 interface SimulationResult {
   ensemble_threat_probability: number;
@@ -39,6 +39,7 @@ interface SimulationResult {
 }
 
 export default function SimulatorPage() {
+  const { data, dataset } = useDataset();
   const presets = data.presets;
 
   // Active form state
@@ -68,7 +69,7 @@ export default function SimulatorPage() {
       const res = await fetch("/api/simulate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ features: currentFeatures }),
+        body: JSON.stringify({ features: currentFeatures, dataset }),
       });
       const data = await res.json();
       setResult(data);
@@ -81,7 +82,7 @@ export default function SimulatorPage() {
 
   useEffect(() => {
     runSimulation(features);
-  }, []);
+  }, [dataset]);
 
   const handlePresetSelect = (presetKey: string) => {
     setActivePreset(presetKey);

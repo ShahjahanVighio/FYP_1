@@ -12,14 +12,16 @@ import {
   AlertTriangle,
   Award,
 } from "lucide-react";
-import data from "@/data/r4_2_metrics.json";
+import { useDataset } from "@/context/DatasetContext";
 
 export default function ResultsPage() {
+  const { data, dataset, plotPrefix } = useDataset();
   const [thresholdMode, setThresholdMode] = useState<"optimal" | "default">("optimal");
   const [selectedPlot, setSelectedPlot] = useState<string | null>(null);
   const [activePlotTab, setActivePlotTab] = useState<"all" | "ensemble" | "xgb" | "cb" | "rf">("all");
 
   const models = data.models;
+  const stats = data.dataset.stats;
 
   const rows = [
     {
@@ -28,18 +30,18 @@ export default function ResultsPage() {
       data: thresholdMode === "optimal" ? models.Random_Forest.test_metrics_optimal_threshold : models.Random_Forest.test_metrics_default_threshold,
       pr_auc: models.Random_Forest.test_metrics_optimal_threshold.pr_auc,
       roc_auc: models.Random_Forest.test_metrics_optimal_threshold.roc_auc,
-      cm: models.Random_Forest.test_metrics_optimal_threshold.confusion_matrix,
-      fpr: models.Random_Forest.test_metrics_optimal_threshold.false_positive_rate,
+      cm: thresholdMode === "optimal" ? models.Random_Forest.test_metrics_optimal_threshold.confusion_matrix : models.Random_Forest.test_metrics_default_threshold.confusion_matrix,
+      fpr: thresholdMode === "optimal" ? models.Random_Forest.test_metrics_optimal_threshold.false_positive_rate : models.Random_Forest.test_metrics_default_threshold.false_positive_rate,
       badge: "Bagging Variance Anchor",
     },
     {
       name: "XGBoost",
-      type: "Cost-Sensitive (scale_pos_weight=1.0)",
+      type: dataset === "r4.2" ? "Cost-Sensitive (scale_pos_weight=1.0)" : "Cost-Sensitive (scale_pos_weight=23.3)",
       data: thresholdMode === "optimal" ? models.XGBoost.test_metrics_optimal_threshold : models.XGBoost.test_metrics_default_threshold,
       pr_auc: models.XGBoost.test_metrics_optimal_threshold.pr_auc,
       roc_auc: models.XGBoost.test_metrics_optimal_threshold.roc_auc,
-      cm: models.XGBoost.test_metrics_optimal_threshold.confusion_matrix,
-      fpr: models.XGBoost.test_metrics_optimal_threshold.false_positive_rate,
+      cm: thresholdMode === "optimal" ? models.XGBoost.test_metrics_optimal_threshold.confusion_matrix : models.XGBoost.test_metrics_default_threshold.confusion_matrix,
+      fpr: thresholdMode === "optimal" ? models.XGBoost.test_metrics_optimal_threshold.false_positive_rate : models.XGBoost.test_metrics_default_threshold.false_positive_rate,
       badge: "Highest Precision Anchor",
     },
     {
@@ -48,18 +50,18 @@ export default function ResultsPage() {
       data: thresholdMode === "optimal" ? models.CatBoost.test_metrics_optimal_threshold : models.CatBoost.test_metrics_default_threshold,
       pr_auc: models.CatBoost.test_metrics_optimal_threshold.pr_auc,
       roc_auc: models.CatBoost.test_metrics_optimal_threshold.roc_auc,
-      cm: models.CatBoost.test_metrics_optimal_threshold.confusion_matrix,
-      fpr: models.CatBoost.test_metrics_optimal_threshold.false_positive_rate,
+      cm: thresholdMode === "optimal" ? models.CatBoost.test_metrics_optimal_threshold.confusion_matrix : models.CatBoost.test_metrics_default_threshold.confusion_matrix,
+      fpr: thresholdMode === "optimal" ? models.CatBoost.test_metrics_optimal_threshold.false_positive_rate : models.CatBoost.test_metrics_default_threshold.false_positive_rate,
       badge: "Highest Single-Model Recall",
     },
     {
       name: "Stacking Ensemble",
-      type: "Optimal Soft-Voting (0.70 XGB + 0.30 CB)",
+      type: dataset === "r4.2" ? "Optimal Soft-Voting (0.70 XGB + 0.30 CB)" : "Calibrated Logistic Regression (Enriched)",
       data: thresholdMode === "optimal" ? models.Stacking_Ensemble.test_metrics_optimal_threshold : models.Stacking_Ensemble.test_metrics_default_threshold,
       pr_auc: models.Stacking_Ensemble.test_metrics_optimal_threshold.pr_auc,
       roc_auc: models.Stacking_Ensemble.test_metrics_optimal_threshold.roc_auc,
-      cm: models.Stacking_Ensemble.test_metrics_optimal_threshold.confusion_matrix,
-      fpr: models.Stacking_Ensemble.test_metrics_optimal_threshold.false_positive_rate,
+      cm: thresholdMode === "optimal" ? models.Stacking_Ensemble.test_metrics_optimal_threshold.confusion_matrix : models.Stacking_Ensemble.test_metrics_default_threshold.confusion_matrix,
+      fpr: thresholdMode === "optimal" ? models.Stacking_Ensemble.test_metrics_optimal_threshold.false_positive_rate : models.Stacking_Ensemble.test_metrics_default_threshold.false_positive_rate,
       badge: "Winner: Peak PR-AUC & Coverage",
       isWinner: true,
     },
@@ -69,74 +71,74 @@ export default function ResultsPage() {
     {
       title: "All Models PR & ROC Comparison",
       category: "all",
-      path: "/plots/ensemble/all_models_pr_roc_comparison.png",
-      caption: "Overlay of Precision-Recall and ROC curves across RF, XGBoost, CatBoost, and Stacking Ensemble.",
+      path: `${plotPrefix}/ensemble/all_models_pr_roc_comparison.png`,
+      caption: `Master comparative Precision-Recall and ROC curves on CERT ${dataset}.`,
     },
     {
       title: "Stacking Ensemble Confusion Matrix",
       category: "ensemble",
-      path: "/plots/ensemble/ensemble_confusion_matrix.png",
-      caption: "93,882 TNs, 18 FPs, 35 FNs, and 188 TPs at optimal decision threshold T* = 0.34.",
+      path: `${plotPrefix}/ensemble/ensemble_confusion_matrix.png`,
+      caption: `Evaluated on ${stats.test_set_sessions.toLocaleString()} untouched test sessions (${stats.test_threats} threats).`,
     },
     {
       title: "Meta-Learner Optimal Model Weights",
       category: "ensemble",
-      path: "/plots/ensemble/meta_learner_weights.png",
-      caption: "Learned soft-voting convex weights: 0.70 XGBoost, 0.30 CatBoost, 0.00 Random Forest.",
+      path: `${plotPrefix}/ensemble/meta_learner_weights.png`,
+      caption: "Learned stacking meta-learner feature weights and importance coefficients.",
     },
     {
       title: "XGBoost Feature Importance",
       category: "xgb",
-      path: "/plots/xgb/xgb_feature_importance.png",
+      path: `${plotPrefix}/xgb/xgb_feature_importance.png`,
       caption: "Top behavioral signals: Removable media, data leak URLs, and document word count.",
     },
     {
       title: "XGBoost PR & ROC Curves",
       category: "xgb",
-      path: "/plots/xgb/xgb_pr_roc_curves.png",
-      caption: "PR-AUC = 0.9192, ROC-AUC = 0.9985 at optimal threshold T* = 0.29.",
+      path: `${plotPrefix}/xgb/xgb_pr_roc_curves.png`,
+      caption: `XGBoost Precision-Recall and ROC curves on CERT ${dataset}.`,
     },
     {
       title: "XGBoost Confusion Matrix",
       category: "xgb",
-      path: "/plots/xgb/xgb_confusion_matrix.png",
-      caption: "15 False Positives out of 93,900 normal sessions (92.54% Precision).",
+      path: `${plotPrefix}/xgb/xgb_confusion_matrix.png`,
+      caption: `XGBoost evaluation on ${stats.test_set_sessions.toLocaleString()} untouched test sessions.`,
     },
     {
       title: "CatBoost Feature Importance",
       category: "cb",
-      path: "/plots/cb/cb_feature_importance.png",
-      caption: "Symmetric oblivious trees split rankings on behavioral features.",
+      path: `${plotPrefix}/cb/cb_feature_importance.png`,
+      caption: "Top predictive attributes driving CatBoost oblivious tree splits.",
     },
     {
       title: "CatBoost PR & ROC Curves",
       category: "cb",
-      path: "/plots/cb/cb_pr_roc_curves.png",
-      caption: "PR-AUC = 0.9124, ROC-AUC = 0.9980 at optimal threshold T* = 0.62.",
+      path: `${plotPrefix}/cb/cb_pr_roc_curves.png`,
+      caption: `CatBoost Precision-Recall and ROC curves on CERT ${dataset}.`,
     },
     {
       title: "CatBoost Confusion Matrix",
       category: "cb",
-      path: "/plots/cb/cb_confusion_matrix.png",
-      caption: "187 Threats Intercepted (83.86% Recall), 27 False Positives.",
+      path: `${plotPrefix}/cb/cb_confusion_matrix.png`,
+      caption: `CatBoost evaluation on ${stats.test_set_sessions.toLocaleString()} untouched test sessions.`,
     },
     {
       title: "Random Forest Feature Importance",
       category: "rf",
-      path: "/plots/rf/rf_feature_importance.png",
-      caption: "Gini impurity reduction across 200 bagging trees.",
+      path: `${plotPrefix}/rf/rf_feature_importance.png`,
+      caption: "Mean decrease in impurity across bagging trees.",
     },
     {
       title: "Random Forest PR & ROC Curves",
       category: "rf",
-      path: "/plots/rf/rf_pr_roc_curves.png",
-      caption: "Cost-sensitive class weighting (balanced_subsample) PR-AUC = 0.8086.",
+      path: `${plotPrefix}/rf/rf_pr_roc_curves.png`,
+      caption: `Random Forest Precision-Recall and ROC curves on CERT ${dataset}.`,
     },
     {
       title: "Random Forest Confusion Matrix",
       category: "rf",
-      path: "/plots/rf/rf_confusion_matrix.png",
-      caption: "151 Threats detected, 31 False Positives at T* = 0.22.",
+      path: `${plotPrefix}/rf/rf_confusion_matrix.png`,
+      caption: `Random Forest evaluation on ${stats.test_set_sessions.toLocaleString()} untouched test sessions.`,
     },
   ];
 

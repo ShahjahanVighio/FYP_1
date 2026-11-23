@@ -30,9 +30,10 @@ import {
   PolarRadiusAxis,
   Radar,
 } from "recharts";
-import data from "@/data/r4_2_metrics.json";
+import { useDataset } from "@/context/DatasetContext";
 
 export default function OverviewPage() {
+  const { data, dataset } = useDataset();
   const stats = data.dataset.stats;
   const models = data.models;
   const ensemble = models.Stacking_Ensemble.test_metrics_optimal_threshold;
@@ -80,11 +81,11 @@ export default function OverviewPage() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
               <Database className="w-3.5 h-3.5" />
-              <span>CMU CERT r4.2 Benchmark</span>
+              <span>CMU CERT {dataset} Benchmark</span>
             </span>
             <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
               <Activity className="w-3.5 h-3.5" />
-              <span>17 Months Telemetry</span>
+              <span>{stats.duration_months} Months Telemetry</span>
             </span>
             <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
               <Cpu className="w-3.5 h-3.5" />
@@ -96,8 +97,8 @@ export default function OverviewPage() {
             An Ensemble Machine Learning Approach to Insider Risk Classification
           </h1>
           <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-3xl">
-            Detecting malicious enterprise activity on sparse audit logs (0.237% positive class).
-            Combines high-speed sessionization across 16.5 GB of heterogeneous logs with leakage-free feature selection
+            Detecting malicious enterprise activity on sparse audit logs ({stats.threat_percentage}% positive class).
+            Combines high-speed sessionization across {stats.raw_log_size_gb} GB of heterogeneous logs with leakage-free feature selection
             and a calibrated soft-voting stacking ensemble of Random Forest, XGBoost, and CatBoost.
           </p>
 
@@ -136,14 +137,14 @@ export default function OverviewPage() {
         <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all col-span-1">
           <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Sessions</div>
           <div className="mt-2 text-xl md:text-2xl font-bold text-slate-100">{stats.total_sessions.toLocaleString()}</div>
-          <div className="mt-1 text-[11px] text-slate-500">1,000 users · 17 months</div>
+          <div className="mt-1 text-[11px] text-slate-500">{stats.employees.toLocaleString()} users · {stats.duration_months} months</div>
         </div>
 
         {/* Threat Prevalence */}
         <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all col-span-1">
           <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">Threat Rate</div>
           <div className="mt-2 text-xl md:text-2xl font-bold text-amber-400">{stats.threat_percentage}%</div>
-          <div className="mt-1 text-[11px] text-slate-500">1,114 threats ({stats.imbalance_ratio})</div>
+          <div className="mt-1 text-[11px] text-slate-500">{stats.insider_threat_sessions.toLocaleString()} threats ({stats.imbalance_ratio})</div>
         </div>
 
         {/* Best PR-AUC */}
@@ -174,7 +175,7 @@ export default function OverviewPage() {
             <CheckCircle2 className="w-3.5 h-3.5" />
           </div>
           <div className="mt-2 text-xl md:text-2xl font-extrabold text-emerald-300">
-            {ensemble.confusion_matrix.tp} / 223
+            {ensemble.confusion_matrix.tp} / {stats.test_threats}
           </div>
           <div className="mt-1 text-[11px] text-emerald-400/80">
             {(ensemble.recall * 100).toFixed(1)}% Test Recall
@@ -185,7 +186,7 @@ export default function OverviewPage() {
         <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all col-span-1">
           <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">False Alarms</div>
           <div className="mt-2 text-xl md:text-2xl font-bold text-slate-100">
-            {ensemble.confusion_matrix.fp} <span className="text-xs font-normal text-slate-400">/ 93.9k</span>
+            {ensemble.confusion_matrix.fp} <span className="text-xs font-normal text-slate-400">/ {((stats.test_set_sessions - stats.test_threats)/1000).toFixed(1)}k</span>
           </div>
           <div className="mt-1 text-[11px] text-slate-500">
             {(ensemble.false_positive_rate * 100).toFixed(4)}% FPR

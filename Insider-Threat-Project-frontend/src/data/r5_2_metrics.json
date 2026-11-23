@@ -1262,5 +1262,99 @@
       "mean": -1.2564660873620823,
       "std": 3.630126655863395
     }
+  },
+  "presets": {
+    "normal_day": {
+      "title": "Normal Employee Shift",
+      "description": "Standard 8-hour weekday office session with benign document editing, no USB devices, and zero cloud uploads.",
+      "features": {
+        "n_usb": 0.0,
+        "usb_mean_usb_dur": 0.0,
+        "http_n_leakf": 0.0,
+        "http_leakf_mean_url_depth": 0.0,
+        "http_leakf_mean_url_len": 0.0,
+        "http_n_jobf": 0.0,
+        "http_jobf_mean_url_len": 0.0,
+        "http_n_hackf": 0.0,
+        "n_file": 3.0,
+        "file_n_docf": 2.0,
+        "file_docf_mean_file_nwords": 450.0,
+        "file_n-disk0": 0.0,
+        "isworkhour": 1.0,
+        "duration": 28800.0,
+        "n_allact": 65.0,
+        "C": 35.0,
+        "E": 28.0
+      }
+    },
+    "scenario_1_usb_theft": {
+      "title": "Scenario 1: After-Hours USB Exfiltration",
+      "description": "User logs in on a weekend or late evening, mounts multiple removable USB drives, and copies compressed archives.",
+      "features": {
+        "n_usb": 6.0,
+        "usb_mean_usb_dur": 3400.0,
+        "http_n_leakf": 0.0,
+        "http_leakf_mean_url_depth": 0.0,
+        "http_leakf_mean_url_len": 0.0,
+        "http_n_jobf": 0.0,
+        "http_jobf_mean_url_len": 0.0,
+        "http_n_hackf": 0.0,
+        "n_file": 48.0,
+        "file_n_docf": 35.0,
+        "file_docf_mean_file_nwords": 4200.0,
+        "file_n-disk0": 28.0,
+        "isworkhour": 0.0,
+        "duration": 5400.0,
+        "n_allact": 140.0,
+        "C": 18.0,
+        "E": 32.0
+      }
+    },
+    "scenario_2_cloud_upload": {
+      "title": "Scenario 2: Job Hunting + Cloud Leak",
+      "description": "Employee actively searches job boards, uploads organizational docs to cloud storage / leak services during work hours.",
+      "features": {
+        "n_usb": 0.0,
+        "usb_mean_usb_dur": 0.0,
+        "http_n_leakf": 7.0,
+        "http_leakf_mean_url_depth": 4.0,
+        "http_leakf_mean_url_len": 65.0,
+        "http_n_jobf": 14.0,
+        "http_jobf_mean_url_len": 82.0,
+        "http_n_hackf": 0.0,
+        "n_file": 12.0,
+        "file_n_docf": 8.0,
+        "file_docf_mean_file_nwords": 1500.0,
+        "file_n-disk0": 0.0,
+        "isworkhour": 1.0,
+        "duration": 18000.0,
+        "n_allact": 190.0,
+        "C": 22.0,
+        "E": 41.0
+      }
+    },
+    "scenario_3_keylogger_recon": {
+      "title": "Scenario 3: Keylogger & Admin Reconnaissance",
+      "description": "System administrator accesses unauthorized websites, downloads hacking/keylogging utilities, and explores network assets.",
+      "features": {
+        "n_usb": 2.0,
+        "usb_mean_usb_dur": 600.0,
+        "http_n_leakf": 2.0,
+        "http_leakf_mean_url_depth": 3.0,
+        "http_leakf_mean_url_len": 45.0,
+        "http_n_jobf": 0.0,
+        "http_jobf_mean_url_len": 0.0,
+        "http_n_hackf": 9.0,
+        "n_file": 15.0,
+        "file_n_docf": 4.0,
+        "file_docf_mean_file_nwords": 900.0,
+        "file_n-disk0": 5.0,
+        "isworkhour": 0.0,
+        "duration": 7200.0,
+        "n_allact": 110.0,
+        "C": 15.0,
+        "E": 20.0
+      }
+    }
   }
 }
