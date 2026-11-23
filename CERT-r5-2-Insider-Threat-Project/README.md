@@ -222,3 +222,15 @@ python train_cb.py
 python train_meta_learner.py
 ```
 > Computes 5-fold OOF probability vectors, tunes the meta-learner and decision threshold, and evaluates generalization on the untouched test partition.
+
+---
+
+## 👥 Project Members & Contributors
+
+### Project Members:
+- **Shahjahan** — F23CSC021
+- **Muhammad Muteeb** — F23CSC048
+- **Bilal Naeem** — F23CSC008
+
+- **Department**: Department of Computer Science & Software Engineering
+- **Dataset Reference**: Glasser, J., & Lindauer, B. (2013). *Bridging the gap: A pragmatic approach to generating insider threat synthetic data*. Carnegie Mellon University, Software Engineering Institute (SEI).

@@ -108,3 +108,14 @@ To enable live model inference using trained weights:
    ```
    *(Listens on `http://localhost:8000`)*
 2. The frontend Route Handler (`src/app/api/simulate/route.ts`) will automatically proxy requests to the FastAPI engine and provide live probability estimates.
+
+---
+
+## 👥 Project Members & Contributors
+
+### Project Members:
+- **Shahjahan** — F23CSC021
+- **Muhammad Muteeb** — F23CSC048
+- **Bilal Naeem** — F23CSC008
+
+- **Department**: Department of Computer Science & Software Engineering

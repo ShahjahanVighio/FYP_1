@@ -228,9 +228,14 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser to explo
 
 ---
 
-## 👥 Contributors & Academic Acknowledgments
+## 👥 Project Members & Contributors
 
-- **Final Year Project Team**: Department of Computer Science & Software Engineering
+### Project Members:
+- **Shahjahan** — F23CSC021
+- **Muhammad Muteeb** — F23CSC048
+- **Bilal Naeem** — F23CSC008
+
+- **Department**: Department of Computer Science & Software Engineering
 - **Dataset Reference**: Glasser, J., & Lindauer, B. (2013). *Bridging the gap: A pragmatic approach to generating insider threat synthetic data*. Carnegie Mellon University, Software Engineering Institute (SEI).
 
 ---
