@@ -345,7 +345,6 @@ npm run dev
 ## 👥 Contributors & Acknowledgments
 
 - **Final Year Project Team**: Department of Computer Science & Software Engineering
-- **Reference Contributor**: Raghav Seth (Faculty of Engineering, University of Ottawa)
 - **Dataset Reference**: Glasser, J., & Lindauer, B. (2013). *Bridging the gap: A pragmatic approach to generating insider threat synthetic data*. Carnegie Mellon University, Software Engineering Institute (SEI).
 
 ---
