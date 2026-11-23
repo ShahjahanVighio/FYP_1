@@ -1,0 +1,414 @@
+{
+  "r4.2": [
+    {
+      "id": "SES-42-01948",
+      "user_id": "ACM2278",
+      "name": "A. C. Mercer",
+      "department": "System Administration",
+      "workstation": "PC-2278",
+      "timestamp": "2010-04-16 21:14:02",
+      "is_afterhours": true,
+      "trigger": "Mass USB Exfiltration (Off-Hours)",
+      "rf_prob": 0.762,
+      "xgb_prob": 0.941,
+      "cb_prob": 0.925,
+      "ensemble_prob": 0.9362,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 1 (USB Theft)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "6 devices",
+          "baseline": "0.02 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "USB Connection Duration (usb_mean_usb_dur)",
+          "val": "3,420 sec",
+          "baseline": "45 sec avg",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Document Word Count (file_docf_mean_file_nwords)",
+          "val": "4,190 words",
+          "baseline": "310 words avg",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Friday 21:14)",
+          "baseline": "Business Hours",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-42-03189",
+      "user_id": "CMP0442",
+      "name": "C. M. Patton",
+      "department": "R&D Engineering",
+      "workstation": "PC-0442",
+      "timestamp": "2010-06-22 14:32:18",
+      "is_afterhours": false,
+      "trigger": "Cloud Storage Uploads & Job Search",
+      "rf_prob": 0.684,
+      "xgb_prob": 0.892,
+      "cb_prob": 0.915,
+      "ensemble_prob": 0.8989,
+      "disposition": "Unreviewed",
+      "ground_truth": "Scenario 2 (Cloud Exfil)",
+      "factors": [
+        {
+          "name": "Data Leak Sites Queries (http_n_leakf)",
+          "val": "8 requests",
+          "baseline": "0.00 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Job Search Inquiries (http_n_jobf)",
+          "val": "14 queries",
+          "baseline": "0.01 / session",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Mean URL Depth (http_leakf_mean_url_depth)",
+          "val": "4.2 levels",
+          "baseline": "1.1 levels avg",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Copied Documents (file_n_docf)",
+          "val": "12 files",
+          "baseline": "1.2 files avg",
+          "risk": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "id": "SES-42-05421",
+      "user_id": "PLJ0158",
+      "name": "P. L. Jenkins",
+      "department": "Network Infrastructure",
+      "workstation": "PC-0158",
+      "timestamp": "2010-09-14 02:44:51",
+      "is_afterhours": true,
+      "trigger": "Hacking Tool Downloads & Recon",
+      "rf_prob": 0.812,
+      "xgb_prob": 0.935,
+      "cb_prob": 0.948,
+      "ensemble_prob": 0.9389,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 3 (Keylogger)",
+      "factors": [
+        {
+          "name": "Hacking Site Access (http_n_hackf)",
+          "val": "9 requests",
+          "baseline": "0.00 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Tuesday 02:44)",
+          "baseline": "Business Hours",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "USB Removable Mounts (n_usb)",
+          "val": "2 devices",
+          "baseline": "0.02 / session",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Psychometric Conscientiousness (C)",
+          "val": "14 / 50",
+          "baseline": "34.8 population avg",
+          "risk": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "id": "SES-42-08912",
+      "user_id": "HRP1822",
+      "name": "H. R. Peterson",
+      "department": "Human Resources",
+      "workstation": "PC-1822",
+      "timestamp": "2010-11-04 11:20:45",
+      "is_afterhours": false,
+      "trigger": "Elevated Cloud Access (Borderline)",
+      "rf_prob": 0.295,
+      "xgb_prob": 0.38,
+      "cb_prob": 0.42,
+      "ensemble_prob": 0.392,
+      "disposition": "False Positive",
+      "ground_truth": "Benign (Authorized Storage)",
+      "factors": [
+        {
+          "name": "Data Leak Sites Queries (http_n_leakf)",
+          "val": "2 requests",
+          "baseline": "0.00 / session",
+          "risk": "MEDIUM"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "1 (Normal Shift)",
+          "baseline": "Business Hours",
+          "risk": "LOW"
+        },
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "0 devices",
+          "baseline": "0.02 / session",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-42-10492",
+      "user_id": "TAW0721",
+      "name": "T. A. Watson",
+      "department": "Finance & Accounting",
+      "workstation": "PC-0721",
+      "timestamp": "2011-01-18 16:55:10",
+      "is_afterhours": false,
+      "trigger": "High File Modification Burst",
+      "rf_prob": 0.31,
+      "xgb_prob": 0.285,
+      "cb_prob": 0.32,
+      "ensemble_prob": 0.2955,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Monthly Close)",
+      "factors": [
+        {
+          "name": "Copied Documents (file_n_docf)",
+          "val": "48 files",
+          "baseline": "1.2 files avg",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "0 devices",
+          "baseline": "0.02 / session",
+          "risk": "LOW"
+        },
+        {
+          "name": "Data Leak Sites Queries (http_n_leakf)",
+          "val": "0 requests",
+          "baseline": "0.00 / session",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-42-12004",
+      "user_id": "JDM1938",
+      "name": "J. D. Miller",
+      "department": "Legal Compliance",
+      "workstation": "PC-1938",
+      "timestamp": "2011-03-09 23:18:41",
+      "is_afterhours": true,
+      "trigger": "Night Removable Drive Usage",
+      "rf_prob": 0.71,
+      "xgb_prob": 0.884,
+      "cb_prob": 0.87,
+      "ensemble_prob": 0.8798,
+      "disposition": "Unreviewed",
+      "ground_truth": "Scenario 1 (USB Theft)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "4 devices",
+          "baseline": "0.02 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "USB Connection Duration (usb_mean_usb_dur)",
+          "val": "2,100 sec",
+          "baseline": "45 sec avg",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Wednesday 23:18)",
+          "baseline": "Business Hours",
+          "risk": "HIGH"
+        }
+      ]
+    }
+  ],
+  "r5.2": [
+    {
+      "id": "SES-52-00412",
+      "user_id": "VSS0192",
+      "name": "V. S. Sharma",
+      "department": "Executive Suite",
+      "workstation": "PC-0192",
+      "timestamp": "2010-05-18 22:40:15",
+      "is_afterhours": true,
+      "trigger": "Scenario 1: Massive USB Archive Copy",
+      "rf_prob": 0.745,
+      "xgb_prob": 0.912,
+      "cb_prob": 0.938,
+      "ensemble_prob": 0.9237,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 1 (Ground Truth)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "7 devices",
+          "baseline": "0.018 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "USB Connection Duration (usb_mean_usb_dur)",
+          "val": "4,100 sec",
+          "baseline": "42 sec avg",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Non-System Drive Files (file_n-disk0)",
+          "val": "24 files",
+          "baseline": "0.01 files avg",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-52-01984",
+      "user_id": "EAK0491",
+      "name": "E. A. Kovacs",
+      "department": "Software Development",
+      "workstation": "PC-0491",
+      "timestamp": "2010-08-11 15:10:44",
+      "is_afterhours": false,
+      "trigger": "Scenario 2: Cloud Exfil & Competitor Recruiting",
+      "rf_prob": 0.692,
+      "xgb_prob": 0.88,
+      "cb_prob": 0.91,
+      "ensemble_prob": 0.8935,
+      "disposition": "Unreviewed",
+      "ground_truth": "Scenario 2 (Ground Truth)",
+      "factors": [
+        {
+          "name": "Data Leak Sites Queries (http_n_leakf)",
+          "val": "11 requests",
+          "baseline": "0.00 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Job Search Inquiries (http_n_jobf)",
+          "val": "19 queries",
+          "baseline": "0.01 / session",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Mean URL Length (http_leakf_mean_url_len)",
+          "val": "84 chars",
+          "baseline": "28 chars avg",
+          "risk": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "id": "SES-52-03822",
+      "user_id": "LKB0881",
+      "name": "L. K. Bennett",
+      "department": "IT Infrastructure",
+      "workstation": "PC-0881",
+      "timestamp": "2010-10-29 03:12:09",
+      "is_afterhours": true,
+      "trigger": "Scenario 3: System Recon & Keylogger Drops",
+      "rf_prob": 0.78,
+      "xgb_prob": 0.925,
+      "cb_prob": 0.942,
+      "ensemble_prob": 0.9327,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 3 (Ground Truth)",
+      "factors": [
+        {
+          "name": "Hacking / Keylogger Lookups (http_n_hackf)",
+          "val": "12 requests",
+          "baseline": "0.00 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Friday 03:12)",
+          "baseline": "Business Hours",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Psychometric Neuroticism (N)",
+          "val": "42 / 50",
+          "baseline": "24.1 population avg",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-52-06109",
+      "user_id": "MRF1402",
+      "name": "M. R. Franklin",
+      "department": "Corporate Communications",
+      "workstation": "PC-1402",
+      "timestamp": "2011-02-14 10:25:30",
+      "is_afterhours": false,
+      "trigger": "Scenario 4: Disgruntled Employee Sabotage",
+      "rf_prob": 0.71,
+      "xgb_prob": 0.865,
+      "cb_prob": 0.895,
+      "ensemble_prob": 0.8785,
+      "disposition": "Unreviewed",
+      "ground_truth": "Scenario 4 (Ground Truth)",
+      "factors": [
+        {
+          "name": "Email External Attachments (email_n_external)",
+          "val": "15 recipients",
+          "baseline": "0.1 avg",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Copied Intellectual Property (file_n_docf)",
+          "val": "34 files",
+          "baseline": "1.1 avg",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Psychometric Agreeableness (A)",
+          "val": "12 / 50",
+          "baseline": "33.5 population avg",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-52-09411",
+      "user_id": "BND0912",
+      "name": "B. N. Davis",
+      "department": "Financial Auditing",
+      "workstation": "PC-0912",
+      "timestamp": "2011-04-20 18:40:11",
+      "is_afterhours": true,
+      "trigger": "Quarterly Ledger Archival",
+      "rf_prob": 0.32,
+      "xgb_prob": 0.295,
+      "cb_prob": 0.335,
+      "ensemble_prob": 0.313,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Audit Work)",
+      "factors": [
+        {
+          "name": "Copied Documents (file_n_docf)",
+          "val": "40 files",
+          "baseline": "1.2 files avg",
+          "risk": "MEDIUM"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Overtime Shift)",
+          "baseline": "Business Hours",
+          "risk": "LOW"
+        }
+      ]
+    }
+  ]
+}

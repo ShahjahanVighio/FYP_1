@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Sidebar from "@/components/Sidebar";
+import Header from "@/components/Header";
 import { DatasetProvider } from "@/context/DatasetContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SENTINEL UEBA | Insider Threat Detection Dashboard",
+  title: "SENTINEL UEBA | Enterprise Insider Threat & Risk Analytics",
   description: "An Ensemble Machine Learning Approach to Insider Risk Classification Using Cultural Metrics and System Behaviors",
 };
 
@@ -15,14 +15,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen flex flex-col bg-[#090D16] text-slate-100 antialiased selection:bg-cyan-500/20 selection:text-cyan-300">
+    <html lang="en">
+      <body className="bg-slate-50 text-slate-900 antialiased flex min-h-screen">
         <DatasetProvider>
-          <Navbar />
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {children}
-          </main>
-          <Footer />
+          <Sidebar />
+          <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden">
+            <Header />
+            <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">
+              {children}
+            </main>
+          </div>
         </DatasetProvider>
       </body>
     </html>

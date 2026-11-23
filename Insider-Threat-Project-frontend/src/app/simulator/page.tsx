@@ -3,23 +3,23 @@
 import { useState, useEffect } from "react";
 import {
   ShieldAlert,
-  Sliders,
   Play,
   RotateCcw,
+  Sliders,
   CheckCircle2,
   AlertTriangle,
-  AlertOctagon,
-  Flame,
-  Activity,
+  Info,
+  Terminal,
   Cpu,
   Layers,
-  Sparkles,
+  Sparkles
 } from "lucide-react";
 import { useDataset } from "@/context/DatasetContext";
 
 interface SimulationResult {
   ensemble_threat_probability: number;
   optimal_threshold: number;
+  dataset?: string;
   is_threat: boolean;
   risk_level: string;
   risk_color: string;
@@ -71,8 +71,8 @@ export default function SimulatorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ features: currentFeatures, dataset }),
       });
-      const data = await res.json();
-      setResult(data);
+      const resData = await res.json();
+      setResult(resData);
     } catch (err) {
       console.error("Simulation error", err);
     } finally {
@@ -109,28 +109,36 @@ export default function SimulatorPage() {
   };
 
   const probPercent = result ? Math.round(result.ensemble_threat_probability * 100) : 0;
+  const isCritical = result?.risk_level.includes("CRITICAL");
+  const isElevated = result?.risk_level.includes("HIGH") || result?.risk_level.includes("ELEVATED");
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
-      <section className="space-y-2">
-        <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-          <ShieldAlert className="w-3.5 h-3.5" />
-          <span>Interactive UEBA Security Operations Center</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+            Live Session Insider Risk Simulator
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Evaluate real-time session inference using the Stacking Ensemble Meta-Learner calibrated for CERT {dataset}.
+          </p>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight">
-          Live Session Insider Threat Simulator
-        </h1>
-        <p className="text-sm text-slate-400 max-w-3xl leading-relaxed">
-          Test real-time session inference using our Stacking Ensemble (XGBoost + CatBoost). Adjust behavioral activity sliders or trigger real-world scenario presets to see live risk scoring.
-        </p>
-      </section>
+
+        <button
+          onClick={resetToNormal}
+          className="px-3 py-1.5 rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-xs font-medium text-slate-600 flex items-center space-x-1.5 transition-colors cursor-pointer"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span>Reset to Normal Baseline</span>
+        </button>
+      </div>
 
       {/* Preset Scenario Selector */}
-      <section className="space-y-3">
-        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center space-x-2">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span>One-Click Scenario Presets</span>
+      <div className="space-y-2">
+        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center space-x-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+          <span>One-Click Ground-Truth Attack Presets</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -140,112 +148,138 @@ export default function SimulatorPage() {
               <button
                 key={key}
                 onClick={() => handlePresetSelect(key)}
-                className={`p-3.5 rounded-xl text-left border transition-all ${
+                className={`p-3.5 rounded-lg border text-left transition-all cursor-pointer ${
                   isSelected
-                    ? "bg-cyan-950/40 border-cyan-500/60 shadow-lg shadow-cyan-500/10 text-slate-100"
-                    : "bg-slate-900/80 border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200"
+                    ? "bg-blue-50/70 border-blue-400 ring-1 ring-blue-400 shadow-xs"
+                    : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50"
                 }`}
               >
-                <div className="font-semibold text-xs text-slate-200">{p.title}</div>
-                <div className="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-relaxed">
-                  {p.description}
+                <div className="flex items-center justify-between">
+                  <span className={`text-xs font-bold ${isSelected ? "text-blue-900" : "text-slate-900"}`}>
+                    {p.title}
+                  </span>
+                  {isSelected && (
+                    <span className="w-2 h-2 rounded-full bg-blue-600" />
+                  )}
                 </div>
+                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed line-clamp-2">
+                  {p.description}
+                </p>
               </button>
             );
           })}
         </div>
-      </section>
+      </div>
 
-      {/* Main Interactive Grid: Sliders vs. Live Gauge */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Behavioral Feature Sliders (7 cols) */}
-        <div className="lg:col-span-7 rounded-xl bg-slate-900/80 border border-slate-800 p-6 space-y-6">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h2 className="text-base font-bold text-slate-100 flex items-center space-x-2">
-              <Sliders className="w-4 h-4 text-cyan-400" />
-              <span>Session Activity Parameters</span>
-            </h2>
-            <button
-              onClick={resetToNormal}
-              className="flex items-center space-x-1 text-xs text-slate-400 hover:text-cyan-400 transition-colors"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset</span>
-            </button>
-          </div>
+      {/* Main Grid: Controls (2/3) & Live Evaluation Drawer (1/3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Sliders Input Area */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Section 1: Removable Media & File System */}
+          <div className="enterprise-card p-4 space-y-4">
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-2 border-b border-slate-100 pb-2">
+              <span>Removable Devices & File Exfiltration</span>
+            </h3>
 
-          <div className="space-y-5 text-xs">
-            {/* Shift Timing Toggle */}
-            <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between">
-              <div>
-                <span className="font-semibold text-slate-200 block">Session Timing</span>
-                <span className="text-[11px] text-slate-500">
-                  {features.isworkhour === 1 ? "Standard Workhours (07:30 - 17:30)" : "Off-Hours / Weekend Activity"}
-                </span>
-              </div>
-              <div className="flex items-center space-x-1.5 p-1 rounded-md bg-slate-900 border border-slate-800">
-                <button
-                  onClick={() => handleSliderChange("isworkhour", 1)}
-                  className={`px-2.5 py-1 rounded text-xs transition-colors ${
-                    features.isworkhour === 1 ? "bg-cyan-500 text-slate-950 font-bold" : "text-slate-400"
-                  }`}
-                >
-                  Workday
-                </button>
-                <button
-                  onClick={() => handleSliderChange("isworkhour", 0)}
-                  className={`px-2.5 py-1 rounded text-xs transition-colors ${
-                    features.isworkhour === 0 ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-400"
-                  }`}
-                >
-                  Off-Hours
-                </button>
-              </div>
-            </div>
-
-            {/* USB Media Sliders */}
-            <div className="space-y-4 pt-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* USB Count */}
               <div className="space-y-1.5">
-                <div className="flex justify-between font-medium">
-                  <span className="text-slate-300">Removable USB Storage Inserts (n_usb)</span>
-                  <span className="text-cyan-400 font-bold font-mono">{features.n_usb} devices</span>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-slate-700">USB Storage Mounts (n_usb)</span>
+                  <span className="font-mono font-bold text-slate-900">{features.n_usb}</span>
                 </div>
                 <input
                   type="range"
                   min="0"
-                  max="10"
+                  max="12"
                   step="1"
                   value={features.n_usb}
                   onChange={(e) => handleSliderChange("n_usb", Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-blue-700 cursor-pointer"
                 />
+                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>0 (None)</span>
+                  <span>12 (Mass Mounts)</span>
+                </div>
               </div>
 
-              {features.n_usb > 0 && (
-                <div className="space-y-1.5 pl-3 border-l-2 border-cyan-500/40">
-                  <div className="flex justify-between font-medium">
-                    <span className="text-slate-300">Mean USB Duration (seconds)</span>
-                    <span className="text-cyan-400 font-bold font-mono">{features.usb_mean_usb_dur}s</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="5000"
-                    step="100"
-                    value={features.usb_mean_usb_dur}
-                    onChange={(e) => handleSliderChange("usb_mean_usb_dur", Number(e.target.value))}
-                    className="w-full accent-cyan-400 cursor-pointer"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Cloud & Data Leak Sites */}
-            <div className="space-y-4 pt-2 border-t border-slate-800/80">
+              {/* USB Dwell Duration */}
               <div className="space-y-1.5">
-                <div className="flex justify-between font-medium">
-                  <span className="text-slate-300">Cloud Storage / Leak Requests (http_n_leakf)</span>
-                  <span className="text-cyan-400 font-bold font-mono">{features.http_n_leakf} requests</span>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-slate-700">USB Dwell Time (seconds)</span>
+                  <span className="font-mono font-bold text-slate-900">{features.usb_mean_usb_dur}s</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="7200"
+                  step="100"
+                  value={features.usb_mean_usb_dur}
+                  onChange={(e) => handleSliderChange("usb_mean_usb_dur", Number(e.target.value))}
+                  className="w-full accent-blue-700 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>0s</span>
+                  <span>7,200s (2 hrs)</span>
+                </div>
+              </div>
+
+              {/* Copied File Count */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-slate-700">Total File Actions (n_file)</span>
+                  <span className="font-mono font-bold text-slate-900">{features.n_file}</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="60"
+                  step="1"
+                  value={features.n_file}
+                  onChange={(e) => handleSliderChange("n_file", Number(e.target.value))}
+                  className="w-full accent-blue-700 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>0 files</span>
+                  <span>60 files</span>
+                </div>
+              </div>
+
+              {/* Document Mean Word Count */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-slate-700">Doc Word Count (words)</span>
+                  <span className="font-mono font-bold text-slate-900">{features.file_docf_mean_file_nwords}</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="8000"
+                  step="200"
+                  value={features.file_docf_mean_file_nwords}
+                  onChange={(e) => handleSliderChange("file_docf_mean_file_nwords", Number(e.target.value))}
+                  className="w-full accent-blue-700 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>0 words</span>
+                  <span>8,000 words</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Web Navigation & HTTP Telemetry */}
+          <div className="enterprise-card p-4 space-y-4">
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-2 border-b border-slate-100 pb-2">
+              <span>Web Navigation & Online Intelligence</span>
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Cloud Leak Visits */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-slate-700">Data Leak Sites (http_n_leakf)</span>
+                  <span className="font-mono font-bold text-slate-900">{features.http_n_leakf}</span>
                 </div>
                 <input
                   type="range"
@@ -254,237 +288,197 @@ export default function SimulatorPage() {
                   step="1"
                   value={features.http_n_leakf}
                   onChange={(e) => handleSliderChange("http_n_leakf", Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-blue-700 cursor-pointer"
                 />
+                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>0</span>
+                  <span>15 requests</span>
+                </div>
               </div>
 
+              {/* Job Search Queries */}
               <div className="space-y-1.5">
-                <div className="flex justify-between font-medium">
-                  <span className="text-slate-300">Job Search Queries (http_n_jobf)</span>
-                  <span className="text-cyan-400 font-bold font-mono">{features.http_n_jobf} queries</span>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-slate-700">Job Board Queries (http_n_jobf)</span>
+                  <span className="font-mono font-bold text-slate-900">{features.http_n_jobf}</span>
                 </div>
                 <input
                   type="range"
                   min="0"
-                  max="20"
+                  max="25"
                   step="1"
                   value={features.http_n_jobf}
                   onChange={(e) => handleSliderChange("http_n_jobf", Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
+                  className="w-full accent-blue-700 cursor-pointer"
                 />
+                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>0</span>
+                  <span>25 queries</span>
+                </div>
               </div>
 
+              {/* Hacking / Keylogger Sites */}
               <div className="space-y-1.5">
-                <div className="flex justify-between font-medium">
-                  <span className="text-slate-300">Hacking / Keylogger Lookups (http_n_hackf)</span>
-                  <span className="text-red-400 font-bold font-mono">{features.http_n_hackf} lookups</span>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-slate-700">Hacking Sites (http_n_hackf)</span>
+                  <span className="font-mono font-bold text-slate-900">{features.http_n_hackf}</span>
                 </div>
                 <input
                   type="range"
                   min="0"
-                  max="10"
+                  max="15"
                   step="1"
                   value={features.http_n_hackf}
                   onChange={(e) => handleSliderChange("http_n_hackf", Number(e.target.value))}
-                  className="w-full accent-red-400 cursor-pointer"
+                  className="w-full accent-blue-700 cursor-pointer"
                 />
+                <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>0</span>
+                  <span>15 lookups</span>
+                </div>
               </div>
-            </div>
 
-            {/* Document Exfiltration */}
-            <div className="space-y-4 pt-2 border-t border-slate-800/80">
+              {/* Workhour vs Afterhour Shift */}
               <div className="space-y-1.5">
-                <div className="flex justify-between font-medium">
-                  <span className="text-slate-300">Document Word Volume (file_docf_mean_file_nwords)</span>
-                  <span className="text-cyan-400 font-bold font-mono">
-                    {features.file_docf_mean_file_nwords.toLocaleString()} words
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium text-slate-700">Operational Timing</span>
+                  <span className="font-semibold text-slate-900">
+                    {features.isworkhour === 1 ? "Normal Business Hours" : "Off-Hours / Weekend"}
                   </span>
                 </div>
-                <input
-                  type="range"
-                  min="100"
-                  max="8000"
-                  step="250"
-                  value={features.file_docf_mean_file_nwords}
-                  onChange={(e) => handleSliderChange("file_docf_mean_file_nwords", Number(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
-                />
-              </div>
-            </div>
-
-            {/* Psychometric Traits */}
-            <div className="space-y-4 pt-2 border-t border-slate-800/80">
-              <div className="space-y-1.5">
-                <div className="flex justify-between font-medium">
-                  <span className="text-slate-300">Conscientiousness (C - OCEAN Personality Score)</span>
-                  <span className="text-slate-400 font-mono">{features.C} / 50</span>
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <button
+                    onClick={() => handleSliderChange("isworkhour", 1)}
+                    className={`py-1.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
+                      features.isworkhour === 1
+                        ? "bg-slate-900 text-white border-slate-900"
+                        : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                    }`}
+                  >
+                    Business Shift (1)
+                  </button>
+                  <button
+                    onClick={() => handleSliderChange("isworkhour", 0)}
+                    className={`py-1.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
+                      features.isworkhour === 0
+                        ? "bg-red-700 text-white border-red-700"
+                        : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                    }`}
+                  >
+                    After-Hours (0)
+                  </button>
                 </div>
-                <input
-                  type="range"
-                  min="10"
-                  max="50"
-                  step="1"
-                  value={features.C}
-                  onChange={(e) => handleSliderChange("C", Number(e.target.value))}
-                  className="w-full accent-slate-400 cursor-pointer"
-                />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Live Risk Verdict & Base Models (5 cols) */}
-        <div className="lg:col-span-5 space-y-4">
-          {/* Main Verdict Card */}
-          <div
-            className="rounded-xl p-6 border transition-all"
-            style={{
-              backgroundColor: "#0E1526",
-              borderColor: result ? result.risk_color : "#1E293B",
-              boxShadow: result && result.is_threat ? `0 0 30px -8px ${result.risk_color}40` : "none",
-            }}
-          >
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                Stacking Ensemble Score
-              </span>
-              <span className="text-xs font-mono text-slate-500">
-                Threshold: T* = 0.34
-              </span>
-            </div>
-
-            {/* Probability Gauge */}
-            <div className="py-6 text-center space-y-2">
-              <div className="text-5xl sm:text-6xl font-black tracking-tight" style={{ color: result?.risk_color || "#F1F5F9" }}>
-                {probPercent}%
-              </div>
-              <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">
-                Predicted Malicious Probability
+        {/* Live Evaluation Right Panel */}
+        <div className="space-y-4">
+          <div className="enterprise-card p-5 space-y-5 sticky top-20">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  Real-Time Threat Score
+                </span>
+                <span className="text-[10px] font-mono text-slate-400">
+                  CERT {dataset}
+                </span>
               </div>
 
-              {/* Threshold Progress Bar */}
-              <div className="pt-3 max-w-xs mx-auto">
-                <div className="h-3 w-full bg-slate-950 rounded-full overflow-hidden p-0.5 border border-slate-800 relative">
-                  <div
-                    className="h-full rounded-full transition-all duration-300"
-                    style={{
-                      width: `${Math.min(100, Math.max(2, probPercent))}%`,
-                      backgroundColor: result?.risk_color || "#10B981",
-                    }}
-                  />
-                  {/* Threshold vertical line indicator at 34% */}
-                  <div
-                    className="absolute top-0 bottom-0 w-0.5 bg-white/70"
-                    style={{ left: "34%" }}
-                    title="Optimal Threshold T* = 0.34"
-                  />
-                </div>
-                <div className="flex justify-between text-[10px] text-slate-500 mt-1">
-                  <span>0%</span>
-                  <span className="text-cyan-400 font-mono">T* = 34%</span>
-                  <span>100%</span>
-                </div>
+              <div className="mt-2 flex items-baseline space-x-2">
+                <span className="font-mono text-3xl font-extrabold text-slate-900 tabular-nums">
+                  {probPercent}%
+                </span>
+                <span className="text-xs text-slate-500 font-mono">
+                  (P = {result?.ensemble_threat_probability.toFixed(4) || "0.0000"})
+                </span>
+              </div>
+
+              {/* Progress bar */}
+              <div className="mt-2 w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    isCritical ? "bg-red-600" : isElevated ? "bg-amber-500" : "bg-emerald-600"
+                  }`}
+                  style={{ width: `${Math.min(100, Math.max(2, probPercent))}%` }}
+                />
+              </div>
+
+              <div className="mt-2 flex items-center justify-between text-[11px]">
+                <span className="text-slate-400">Optimal Cutoff:</span>
+                <span className="font-mono font-semibold text-slate-700">
+                  T* = {result?.optimal_threshold || 0.34}
+                </span>
               </div>
             </div>
 
-            {/* Verdict Badge */}
-            <div className="pt-2 text-center">
-              <div
-                className="inline-block px-4 py-1.5 rounded-lg text-xs font-extrabold uppercase tracking-wider"
-                style={{
-                  backgroundColor: `${result?.risk_color}20`,
-                  color: result?.risk_color,
-                  border: `1px solid ${result?.risk_color}50`,
-                }}
-              >
-                {result?.risk_level}
+            {/* Severity Pill */}
+            <div
+              className={`p-3 rounded-lg border text-xs space-y-1 ${
+                isCritical
+                  ? "bg-red-50 border-red-200 text-red-900"
+                  : isElevated
+                  ? "bg-amber-50 border-amber-200 text-amber-900"
+                  : "bg-emerald-50 border-emerald-200 text-emerald-900"
+              }`}
+            >
+              <div className="font-bold flex items-center space-x-1.5">
+                <ShieldAlert className="w-3.5 h-3.5" />
+                <span>{result?.risk_level}</span>
               </div>
-              <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+              <p className="text-[11px] leading-relaxed">
                 {result?.recommendation}
               </p>
             </div>
-          </div>
 
-          {/* Base Models Breakdown */}
-          <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-5 space-y-3 text-xs">
-            <h3 className="font-bold text-slate-100 flex items-center space-x-2">
-              <Cpu className="w-4 h-4 text-cyan-400" />
-              <span>Base Classifier Risk Vectors</span>
-            </h3>
+            {/* Tri-Model Scores Breakdown */}
+            <div className="space-y-2 pt-2 border-t border-slate-100">
+              <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                Base Model Attributions
+              </h4>
 
-            {result && (
-              <div className="space-y-2.5 pt-1">
-                {/* XGBoost */}
-                <div className="space-y-1">
-                  <div className="flex justify-between">
-                    <span className="text-slate-300 font-medium">XGBoost (Weight: 70%)</span>
-                    <span className="font-mono font-bold text-orange-400">
-                      {(result.base_model_probabilities.xgboost * 100).toFixed(1)}%
-                    </span>
-                  </div>
-                  <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-orange-500 rounded-full"
-                      style={{ width: `${result.base_model_probabilities.xgboost * 100}%` }}
-                    />
-                  </div>
+              <div className="space-y-2 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">XGBoost (Histogram)</span>
+                  <span className="font-mono font-bold text-slate-900 tabular-nums">
+                    {result ? (result.base_model_probabilities.xgboost * 100).toFixed(1) : 0}%
+                  </span>
                 </div>
 
-                {/* CatBoost */}
-                <div className="space-y-1">
-                  <div className="flex justify-between">
-                    <span className="text-slate-300 font-medium">CatBoost (Weight: 30%)</span>
-                    <span className="font-mono font-bold text-emerald-400">
-                      {(result.base_model_probabilities.catboost * 100).toFixed(1)}%
-                    </span>
-                  </div>
-                  <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-emerald-500 rounded-full"
-                      style={{ width: `${result.base_model_probabilities.catboost * 100}%` }}
-                    />
-                  </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">CatBoost (Oblivious)</span>
+                  <span className="font-mono font-bold text-slate-900 tabular-nums">
+                    {result ? (result.base_model_probabilities.catboost * 100).toFixed(1) : 0}%
+                  </span>
                 </div>
 
-                {/* Random Forest */}
-                <div className="space-y-1">
-                  <div className="flex justify-between">
-                    <span className="text-slate-300 font-medium">Random Forest</span>
-                    <span className="font-mono font-bold text-blue-400">
-                      {(result.base_model_probabilities.random_forest * 100).toFixed(1)}%
-                    </span>
-                  </div>
-                  <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-blue-500 rounded-full"
-                      style={{ width: `${result.base_model_probabilities.random_forest * 100}%` }}
-                    />
-                  </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Random Forest (Bagging)</span>
+                  <span className="font-mono font-bold text-slate-900 tabular-nums">
+                    {result ? (result.base_model_probabilities.random_forest * 100).toFixed(1) : 0}%
+                  </span>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* Active Detected Threat Signals */}
-          <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-5 space-y-3 text-xs">
-            <h3 className="font-bold text-slate-100 flex items-center space-x-2">
-              <Activity className="w-4 h-4 text-emerald-400" />
-              <span>Active Behavioral Indicators</span>
-            </h3>
-
-            {result && (
-              <div className="space-y-2 pt-1">
-                {result.key_signals.map((sig, idx) => (
-                  <div key={idx} className="flex items-start space-x-2 text-slate-300">
-                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
-                    <span>{sig}</span>
-                  </div>
+            {/* Key Triggered Signals */}
+            <div className="space-y-2 pt-2 border-t border-slate-100">
+              <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                Triggered Anomaly Signals
+              </h4>
+              <ul className="space-y-1 text-xs">
+                {result?.key_signals.map((sig, idx) => (
+                  <li key={idx} className="flex items-start space-x-1.5 text-slate-700">
+                    <span className="text-blue-600 font-bold">•</span>
+                    <span className="text-[11px]">{sig}</span>
+                  </li>
                 ))}
-              </div>
-            )}
+              </ul>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

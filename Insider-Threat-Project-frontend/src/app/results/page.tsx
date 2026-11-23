@@ -11,6 +11,8 @@ import {
   CheckCircle2,
   AlertTriangle,
   Award,
+  Layers,
+  BarChart2
 } from "lucide-react";
 import { useDataset } from "@/context/DatasetContext";
 
@@ -26,43 +28,46 @@ export default function ResultsPage() {
   const rows = [
     {
       name: "Random Forest",
-      type: "Cost-Sensitive (balanced_subsample)",
+      role: "Bagging Variance Anchor",
+      strategy: "Cost-Sensitive (balanced_subsample)",
       data: thresholdMode === "optimal" ? models.Random_Forest.test_metrics_optimal_threshold : models.Random_Forest.test_metrics_default_threshold,
       pr_auc: models.Random_Forest.test_metrics_optimal_threshold.pr_auc,
       roc_auc: models.Random_Forest.test_metrics_optimal_threshold.roc_auc,
       cm: thresholdMode === "optimal" ? models.Random_Forest.test_metrics_optimal_threshold.confusion_matrix : models.Random_Forest.test_metrics_default_threshold.confusion_matrix,
       fpr: thresholdMode === "optimal" ? models.Random_Forest.test_metrics_optimal_threshold.false_positive_rate : models.Random_Forest.test_metrics_default_threshold.false_positive_rate,
-      badge: "Bagging Variance Anchor",
+      isWinner: false,
     },
     {
       name: "XGBoost",
-      type: dataset === "r4.2" ? "Cost-Sensitive (scale_pos_weight=1.0)" : "Cost-Sensitive (scale_pos_weight=23.3)",
+      role: "Precision Anchor (Lowest False Alarms)",
+      strategy: dataset === "r4.2" ? "Cost-Sensitive (scale_pos_weight=1.0)" : "Cost-Sensitive (scale_pos_weight=23.3)",
       data: thresholdMode === "optimal" ? models.XGBoost.test_metrics_optimal_threshold : models.XGBoost.test_metrics_default_threshold,
       pr_auc: models.XGBoost.test_metrics_optimal_threshold.pr_auc,
       roc_auc: models.XGBoost.test_metrics_optimal_threshold.roc_auc,
       cm: thresholdMode === "optimal" ? models.XGBoost.test_metrics_optimal_threshold.confusion_matrix : models.XGBoost.test_metrics_default_threshold.confusion_matrix,
       fpr: thresholdMode === "optimal" ? models.XGBoost.test_metrics_optimal_threshold.false_positive_rate : models.XGBoost.test_metrics_default_threshold.false_positive_rate,
-      badge: "Highest Precision Anchor",
+      isWinner: false,
     },
     {
       name: "CatBoost",
-      type: "Cost-Sensitive (SqrtBalanced)",
+      role: "Recall Anchor (Highest Single Threat Capture)",
+      strategy: "Cost-Sensitive (SqrtBalanced)",
       data: thresholdMode === "optimal" ? models.CatBoost.test_metrics_optimal_threshold : models.CatBoost.test_metrics_default_threshold,
       pr_auc: models.CatBoost.test_metrics_optimal_threshold.pr_auc,
       roc_auc: models.CatBoost.test_metrics_optimal_threshold.roc_auc,
       cm: thresholdMode === "optimal" ? models.CatBoost.test_metrics_optimal_threshold.confusion_matrix : models.CatBoost.test_metrics_default_threshold.confusion_matrix,
       fpr: thresholdMode === "optimal" ? models.CatBoost.test_metrics_optimal_threshold.false_positive_rate : models.CatBoost.test_metrics_default_threshold.false_positive_rate,
-      badge: "Highest Single-Model Recall",
+      isWinner: false,
     },
     {
       name: "Stacking Ensemble",
-      type: dataset === "r4.2" ? "Optimal Soft-Voting (0.70 XGB + 0.30 CB)" : "Calibrated Logistic Regression (Enriched)",
+      role: "Multi-Model Meta-Learner (Overall Champion)",
+      strategy: dataset === "r4.2" ? "Convex Soft-Voting (0.70 XGB + 0.30 CB)" : "Calibrated Logistic Regression (Enriched)",
       data: thresholdMode === "optimal" ? models.Stacking_Ensemble.test_metrics_optimal_threshold : models.Stacking_Ensemble.test_metrics_default_threshold,
       pr_auc: models.Stacking_Ensemble.test_metrics_optimal_threshold.pr_auc,
       roc_auc: models.Stacking_Ensemble.test_metrics_optimal_threshold.roc_auc,
       cm: thresholdMode === "optimal" ? models.Stacking_Ensemble.test_metrics_optimal_threshold.confusion_matrix : models.Stacking_Ensemble.test_metrics_default_threshold.confusion_matrix,
       fpr: thresholdMode === "optimal" ? models.Stacking_Ensemble.test_metrics_optimal_threshold.false_positive_rate : models.Stacking_Ensemble.test_metrics_default_threshold.false_positive_rate,
-      badge: "Winner: Peak PR-AUC & Coverage",
       isWinner: true,
     },
   ];
@@ -72,19 +77,19 @@ export default function ResultsPage() {
       title: "All Models PR & ROC Comparison",
       category: "all",
       path: `${plotPrefix}/ensemble/all_models_pr_roc_comparison.png`,
-      caption: `Master comparative Precision-Recall and ROC curves on CERT ${dataset}.`,
+      caption: `Precision-Recall and ROC comparative evaluation across all architectures on CERT ${dataset}.`,
     },
     {
       title: "Stacking Ensemble Confusion Matrix",
       category: "ensemble",
       path: `${plotPrefix}/ensemble/ensemble_confusion_matrix.png`,
-      caption: `Evaluated on ${stats.test_set_sessions.toLocaleString()} untouched test sessions (${stats.test_threats} threats).`,
+      caption: `Evaluated on ${stats.test_set_sessions.toLocaleString()} untouched test sessions (${stats.test_threats} ground-truth threats).`,
     },
     {
       title: "Meta-Learner Optimal Model Weights",
       category: "ensemble",
       path: `${plotPrefix}/ensemble/meta_learner_weights.png`,
-      caption: "Learned stacking meta-learner feature weights and importance coefficients.",
+      caption: "Learned stacking meta-learner feature weights and algorithmic coefficients.",
     },
     {
       title: "XGBoost Feature Importance",
@@ -96,13 +101,13 @@ export default function ResultsPage() {
       title: "XGBoost PR & ROC Curves",
       category: "xgb",
       path: `${plotPrefix}/xgb/xgb_pr_roc_curves.png`,
-      caption: `XGBoost Precision-Recall and ROC curves on CERT ${dataset}.`,
+      caption: `Histogram gradient tree boosting curves on CERT ${dataset}.`,
     },
     {
       title: "XGBoost Confusion Matrix",
       category: "xgb",
       path: `${plotPrefix}/xgb/xgb_confusion_matrix.png`,
-      caption: `XGBoost evaluation on ${stats.test_set_sessions.toLocaleString()} untouched test sessions.`,
+      caption: `Evaluated on ${stats.test_set_sessions.toLocaleString()} test sessions.`,
     },
     {
       title: "CatBoost Feature Importance",
@@ -114,13 +119,13 @@ export default function ResultsPage() {
       title: "CatBoost PR & ROC Curves",
       category: "cb",
       path: `${plotPrefix}/cb/cb_pr_roc_curves.png`,
-      caption: `CatBoost Precision-Recall and ROC curves on CERT ${dataset}.`,
+      caption: `Symmetric tree gradient boosting curves on CERT ${dataset}.`,
     },
     {
       title: "CatBoost Confusion Matrix",
       category: "cb",
       path: `${plotPrefix}/cb/cb_confusion_matrix.png`,
-      caption: `CatBoost evaluation on ${stats.test_set_sessions.toLocaleString()} untouched test sessions.`,
+      caption: `Evaluated on ${stats.test_set_sessions.toLocaleString()} test sessions.`,
     },
     {
       title: "Random Forest Feature Importance",
@@ -132,201 +137,171 @@ export default function ResultsPage() {
       title: "Random Forest PR & ROC Curves",
       category: "rf",
       path: `${plotPrefix}/rf/rf_pr_roc_curves.png`,
-      caption: `Random Forest Precision-Recall and ROC curves on CERT ${dataset}.`,
+      caption: `Subsample-balanced bagging trees on CERT ${dataset}.`,
     },
     {
       title: "Random Forest Confusion Matrix",
       category: "rf",
       path: `${plotPrefix}/rf/rf_confusion_matrix.png`,
-      caption: `Random Forest evaluation on ${stats.test_set_sessions.toLocaleString()} untouched test sessions.`,
+      caption: `Evaluated on ${stats.test_set_sessions.toLocaleString()} test sessions.`,
     },
   ];
 
-  const filteredGallery = activePlotTab === "all"
-    ? gallery
-    : gallery.filter((p) => p.category === activePlotTab);
+  const filteredGallery = gallery.filter((item) => {
+    if (activePlotTab === "all") return true;
+    return item.category === activePlotTab;
+  });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
-      <section className="space-y-2">
-        <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-          <Cpu className="w-3.5 h-3.5" />
-          <span>Evaluation Benchmark</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight">
-          Model Leaderboard & Empirical Curves
-        </h1>
-        <p className="text-sm text-slate-400 max-w-3xl leading-relaxed">
-          Head-to-head performance across all 4 machine learning pipelines evaluated on the exact same untouched test partition (94,123 sessions, 223 threat cases).
-        </p>
-      </section>
-
-      {/* Threshold Toggle & Leaderboard Table */}
-      <section className="rounded-xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h2 className="text-base font-bold text-slate-100 flex items-center space-x-2">
-              <Award className="w-4 h-4 text-cyan-400" />
-              <span>Master 4-Model Test Set Leaderboard</span>
-            </h2>
-            <p className="text-xs text-slate-400">
-              Evaluated on X_test (94,123 rows). Thresholds optimized strictly on out-of-fold cross-validation.
-            </p>
-          </div>
-
-          {/* Toggle Button */}
-          <div className="flex items-center p-1 rounded-lg bg-slate-950 border border-slate-800 text-xs">
-            <button
-              onClick={() => setThresholdMode("optimal")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
-                thresholdMode === "optimal"
-                  ? "bg-cyan-500 text-slate-950 font-bold"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Optimal Threshold (T*)
-            </button>
-            <button
-              onClick={() => setThresholdMode("default")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
-                thresholdMode === "default"
-                  ? "bg-cyan-500 text-slate-950 font-bold"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Default (T = 0.50)
-            </button>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+            Model Performance Benchmarks
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Rigorous evaluation on strictly untouched test partition ({stats.test_set_sessions.toLocaleString()} sessions, {stats.test_threats} ground-truth threats) in CERT {dataset}.
+          </p>
         </div>
 
-        {/* Table */}
+        {/* Threshold Toggle */}
+        <div className="flex items-center space-x-2 bg-white p-1 rounded-lg border border-slate-200">
+          <span className="text-[11px] font-semibold text-slate-500 px-2">Decision Cutoff:</span>
+          <button
+            onClick={() => setThresholdMode("optimal")}
+            className={`px-3 py-1 rounded text-xs font-semibold transition-colors cursor-pointer ${
+              thresholdMode === "optimal"
+                ? "bg-slate-900 text-white"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Optimal (T*)
+          </button>
+          <button
+            onClick={() => setThresholdMode("default")}
+            className={`px-3 py-1 rounded text-xs font-semibold transition-colors cursor-pointer ${
+              thresholdMode === "default"
+                ? "bg-slate-900 text-white"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Default (0.50)
+          </button>
+        </div>
+      </div>
+
+      {/* Main Leaderboard Table */}
+      <div className="enterprise-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full text-left soc-table">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 font-semibold uppercase tracking-wider">
-                <th className="py-3 px-3">Model</th>
-                <th className="py-3 px-3">Strategy</th>
-                <th className="py-3 px-2 text-center">Threshold</th>
-                <th className="py-3 px-3 text-right">Precision</th>
-                <th className="py-3 px-3 text-right">Recall</th>
-                <th className="py-3 px-3 text-right">F1-Score</th>
-                <th className="py-3 px-3 text-right">PR-AUC</th>
-                <th className="py-3 px-3 text-right">ROC-AUC</th>
-                <th className="py-3 px-3 text-right">FPR</th>
-                <th className="py-3 px-3 text-right">Threats (TP)</th>
+              <tr>
+                <th>Model Architecture</th>
+                <th>Training Strategy</th>
+                <th className="text-right">Threshold (T)</th>
+                <th className="text-right">PR-AUC</th>
+                <th className="text-right">ROC-AUC</th>
+                <th className="text-right">Precision</th>
+                <th className="text-right">Recall</th>
+                <th className="text-right">F1-Score</th>
+                <th className="text-right">Threats Caught</th>
+                <th className="text-right">False Alarms</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-mono">
+            <tbody>
               {rows.map((row) => (
                 <tr
                   key={row.name}
-                  className={`hover:bg-slate-800/40 transition-colors ${
-                    row.isWinner ? "bg-cyan-950/20" : ""
-                  }`}
+                  className={row.isWinner ? "bg-blue-50/40 font-medium" : ""}
                 >
-                  <td className="py-3 px-3 font-sans font-bold text-slate-100 flex items-center space-x-2">
-                    <span>{row.name}</span>
-                    {row.isWinner && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                        WINNER
-                      </span>
-                    )}
+                  <td>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-bold text-slate-900">{row.name}</span>
+                      {row.isWinner && (
+                        <span className="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-blue-100 text-blue-800 border border-blue-200">
+                          Champion
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-[11px] text-slate-500">{row.role}</div>
                   </td>
-                  <td className="py-3 px-3 font-sans text-slate-400 text-[11px]">{row.type}</td>
-                  <td className="py-3 px-2 text-center text-cyan-400 font-bold">
-                    {row.data.threshold.toFixed(2)}
+
+                  <td className="text-xs text-slate-700">
+                    {row.strategy}
                   </td>
-                  <td className="py-3 px-3 text-right font-bold text-slate-200">
-                    {(row.data.precision * 100).toFixed(2)}%
+
+                  <td className="text-right font-mono text-xs text-slate-800 font-bold tabular-nums">
+                    {row.data.threshold}
                   </td>
-                  <td className="py-3 px-3 text-right font-bold text-slate-200">
-                    {(row.data.recall * 100).toFixed(2)}%
-                  </td>
-                  <td className="py-3 px-3 text-right font-bold text-emerald-400">
-                    {(row.data.f1_score * 100).toFixed(2)}%
-                  </td>
-                  <td className="py-3 px-3 text-right font-bold text-cyan-300">
+
+                  <td className="text-right font-mono text-xs font-bold text-blue-800 tabular-nums">
                     {row.pr_auc.toFixed(4)}
                   </td>
-                  <td className="py-3 px-3 text-right text-slate-300">
+
+                  <td className="text-right font-mono text-xs text-slate-700 tabular-nums">
                     {row.roc_auc.toFixed(4)}
                   </td>
-                  <td className="py-3 px-3 text-right text-slate-400">
-                    {(row.fpr * 100).toFixed(4)}%
+
+                  <td className="text-right font-mono text-xs text-slate-900 tabular-nums">
+                    {(row.data.precision * 100).toFixed(1)}%
                   </td>
-                  <td className="py-3 px-3 text-right font-bold text-emerald-400">
-                    {row.cm.tp} <span className="text-slate-500 font-normal">/ 223</span>
+
+                  <td className="text-right font-mono text-xs text-slate-900 tabular-nums">
+                    {(row.data.recall * 100).toFixed(1)}%
+                  </td>
+
+                  <td className="text-right font-mono text-xs font-bold text-slate-900 tabular-nums">
+                    {(row.data.f1_score * 100).toFixed(1)}%
+                  </td>
+
+                  <td className="text-right font-mono text-xs font-bold text-emerald-700 tabular-nums">
+                    {row.cm.tp} / {stats.test_threats}
+                  </td>
+
+                  <td className="text-right font-mono text-xs text-slate-600 tabular-nums">
+                    {row.cm.fp} <span className="text-[10px] text-slate-400">({(row.fpr * 100).toFixed(4)}%)</span>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+      </div>
 
-        <div className="pt-2 text-[11px] text-slate-500 flex flex-wrap items-center justify-between gap-2">
-          <span>* Evaluated on untouched test partition: 94,123 total sessions (93,900 normal, 223 threat).</span>
-          <span className="text-cyan-400">
-            Stacking Ensemble intercepts 188 threats (84.30% Recall) with only 18 false alarms.
-          </span>
-        </div>
-      </section>
-
-      {/* Plot Gallery & Lightbox */}
-      <section className="space-y-4">
+      {/* Visual Artifacts Gallery */}
+      <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-bold text-slate-100 flex items-center space-x-2">
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
-              <span>Publication-Grade Evaluation Curves & Figures (300 DPI)</span>
+            <h2 className="text-sm font-bold text-slate-900">
+              High-Resolution Evaluation Artifacts (300 DPI)
             </h2>
-            <p className="text-xs text-slate-400">
-              Click any visualization to expand into full-resolution inspector view.
+            <p className="text-[11px] text-slate-500">
+              Click any visualization to zoom in full resolution.
             </p>
           </div>
 
-          {/* Filter Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-lg bg-slate-900 border border-slate-800 text-xs">
-            <button
-              onClick={() => setActivePlotTab("all")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                activePlotTab === "all" ? "bg-slate-800 text-cyan-400 font-bold" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              All Plots
-            </button>
-            <button
-              onClick={() => setActivePlotTab("ensemble")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                activePlotTab === "ensemble" ? "bg-slate-800 text-cyan-400 font-bold" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Stacking Ensemble
-            </button>
-            <button
-              onClick={() => setActivePlotTab("xgb")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                activePlotTab === "xgb" ? "bg-slate-800 text-orange-400 font-bold" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              XGBoost
-            </button>
-            <button
-              onClick={() => setActivePlotTab("cb")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                activePlotTab === "cb" ? "bg-slate-800 text-emerald-400 font-bold" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              CatBoost
-            </button>
-            <button
-              onClick={() => setActivePlotTab("rf")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                activePlotTab === "rf" ? "bg-slate-800 text-blue-400 font-bold" : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Random Forest
-            </button>
+          {/* Gallery Category Tabs */}
+          <div className="flex items-center space-x-1 bg-white p-1 rounded-md border border-slate-200">
+            {[
+              { id: "all", label: "All" },
+              { id: "ensemble", label: "Ensemble" },
+              { id: "xgb", label: "XGBoost" },
+              { id: "cb", label: "CatBoost" },
+              { id: "rf", label: "Random Forest" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActivePlotTab(tab.id as any)}
+                className={`px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
+                  activePlotTab === tab.id
+                    ? "bg-slate-900 text-white font-semibold"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -336,48 +311,61 @@ export default function ResultsPage() {
             <div
               key={idx}
               onClick={() => setSelectedPlot(item.path)}
-              className="group cursor-pointer rounded-xl bg-slate-900/80 border border-slate-800 overflow-hidden hover:border-cyan-500/50 transition-all flex flex-col justify-between"
+              className="enterprise-card overflow-hidden hover:border-slate-300 transition-all cursor-pointer group flex flex-col"
             >
-              <div className="relative h-56 w-full bg-slate-950 flex items-center justify-center p-2 overflow-hidden">
-                <img
+              <div className="relative h-56 bg-slate-100 border-b border-slate-200 flex items-center justify-center overflow-hidden">
+                <Image
                   src={item.path}
                   alt={item.title}
-                  className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-200"
+                  fill
+                  className="object-contain p-2 group-hover:scale-[1.02] transition-transform duration-200"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
-                <div className="absolute top-2 right-2 p-1.5 rounded-lg bg-slate-900/80 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Maximize2 className="w-4 h-4 text-cyan-400" />
+                <div className="absolute top-2 right-2 p-1.5 rounded bg-white/90 border border-slate-200 shadow-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Maximize2 className="w-3.5 h-3.5 text-slate-700" />
                 </div>
               </div>
 
-              <div className="p-3 border-t border-slate-800/80 bg-slate-900">
-                <div className="font-semibold text-xs text-slate-200 group-hover:text-cyan-400 transition-colors">
-                  {item.title}
+              <div className="p-3.5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-xs font-bold text-slate-900">{item.title}</h3>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                    {item.caption}
+                  </p>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
-                  {item.caption}
-                </p>
               </div>
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
       {/* Lightbox Modal */}
       {selectedPlot && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="relative max-w-5xl w-full max-h-[90vh] bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden p-4 flex flex-col items-center">
-            <button
-              onClick={() => setSelectedPlot(null)}
-              className="absolute top-4 right-4 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors z-10"
-            >
-              <X className="w-5 h-5" />
-            </button>
+        <div
+          onClick={() => setSelectedPlot(null)}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white rounded-xl shadow-2xl border border-slate-200 max-w-5xl w-full p-4 flex flex-col"
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <span className="font-mono text-xs text-slate-500">{selectedPlot}</span>
+              <button
+                onClick={() => setSelectedPlot(null)}
+                className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
-            <div className="w-full flex-1 flex items-center justify-center overflow-auto max-h-[80vh]">
-              <img
+            <div className="relative h-[75vh] w-full my-2 bg-slate-50 rounded-lg flex items-center justify-center">
+              <Image
                 src={selectedPlot}
-                alt="Enlarged Plot"
-                className="max-h-full max-w-full object-contain rounded-lg"
+                alt="Full Resolution Plot"
+                fill
+                className="object-contain p-4"
+                sizes="100vw"
               />
             </div>
           </div>
