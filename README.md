@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/License-Academic%20Use-lightgrey.svg)](CERT-r4-2-Insider-Threat-Project/license.txt)
 [![Status](https://img.shields.io/badge/Status-Completed-success.svg)]()
 
-> **Final Year Project (FYP)** — Sukkur IBA University  
+> **Final Year Project (FYP)** — **Salim Habib University**  
 > **Domain**: Cybersecurity · User & Entity Behavior Analytics (UEBA) · Enterprise Machine Learning  
 > **Project Members**:  
 > - **Muhammad Muteeb** (`F23CSC048`) — *Lead Architect & Security Modeling*  
@@ -111,7 +111,7 @@ Open [http://localhost:3000](http://localhost:3000) to explore the interactive S
 
 ## 👥 Authors & Project Attribution
 
-This project is submitted in partial fulfillment of the requirements for the Degree of **Bachelor of Science in Computer Science** at **Sukkur IBA University**:
+This project is submitted in partial fulfillment of the requirements for the Degree of **Bachelor of Science in Computer Science** at **Salim Habib University**:
 - **Muhammad Muteeb** (`F23CSC048`) — *Lead Architect & Security Modeling*
 - **Shahjahan Vighio** (`F23CSC021`) — *Data Pipelines & Feature Engineering*
 - **Bilal Naeem** (`F23CSC008`) — *Evaluation Metrics & Frontend Analytics*

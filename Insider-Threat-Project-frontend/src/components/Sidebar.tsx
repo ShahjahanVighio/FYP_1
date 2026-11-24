@@ -191,8 +191,11 @@ export default function Sidebar() {
           <span className="font-mono text-[10px] text-slate-400">SOC Ready</span>
         </div>
 
-        <div className="text-[10px] text-slate-400 font-medium">
+        <div className="text-[10px] text-slate-500 font-medium">
           Muteeb · Shahjahan · Bilal
+        </div>
+        <div className="text-[9px] text-slate-400">
+          Salim Habib University
         </div>
       </div>
     </aside>

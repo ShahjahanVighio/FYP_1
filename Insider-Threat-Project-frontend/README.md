@@ -5,9 +5,9 @@
 [![Charts](https://img.shields.io/badge/Charts-Recharts-22c55e.svg)](https://recharts.org/)
 [![Icons](https://img.shields.io/badge/Icons-Lucide%20React-06b6d4.svg)](https://lucide.dev/)
 [![TypeScript](https://img.shields.io/badge/Language-TypeScript%205-blue.svg)](https://www.typescriptlang.org/)
-[![Dataset](https://img.shields.io/badge/Benchmarks-CMU%20CERT%20r4.2%20%7C%20r5.2-orange.svg)](https://www.cert.org/)
+[![Dataset](https://img.shields.io/badge/Benchmarks-CMU%20CERT%20r4.2%20%7C%20r5.2%20%7C%20r6.2-orange.svg)](https://www.cert.org/)
 
-**SENTINEL UEBA** is an enterprise-grade Security Operations Center (SOC) incident investigation dashboard and real-time behavioral risk analytics platform. Engineered specifically for security analysts, incident responders, and ML researchers, SENTINEL provides an authentic operational workspace to monitor, triage, simulate, and analyze insider threats across both the **CMU CERT r4.2** (470,611 sessions, 1,114 threats) and **CMU CERT r5.2** (1,004,460 sessions, 1,846 threats) benchmark datasets.
+**SENTINEL UEBA** is an enterprise-grade Security Operations Center (SOC) incident investigation dashboard and real-time behavioral risk analytics platform. Engineered specifically for security analysts, incident responders, and ML researchers, SENTINEL provides an authentic operational workspace to monitor, triage, simulate, and analyze insider threats across the **CMU CERT r4.2** (470,611 sessions, 1,114 threats), **CMU CERT r5.2** (1,004,460 sessions, 1,846 threats), and **CMU CERT r6.2** (1,949,073 sessions, 98 threats) benchmark datasets—totaling over **3,424,000 enterprise sessions** across Scenarios 1 through 5.
 
 ---
 
@@ -238,5 +238,6 @@ Insider-Threat-Project-frontend/
 * **Muhammad Muteeb** — `F23CSC048`
 * **Bilal Naeem** — `F23CSC008`
 
+**Institution:** Salim Habib University  
 **Department:** Department of Computer Science & Software Engineering  
 **Project Repository:** [https://github.com/ShahjahanVighio/FYP_1](https://github.com/ShahjahanVighio/FYP_1)

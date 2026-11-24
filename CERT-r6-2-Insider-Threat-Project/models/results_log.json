@@ -1,0 +1,445 @@
+{
+  "Random_Forest": {
+    "model_name": "Random Forest",
+    "dataset": "CERT r6.2",
+    "winning_strategy": "cost_sensitive",
+    "best_hyperparameters": {
+      "n_estimators": 150,
+      "min_samples_split": 2,
+      "min_samples_leaf": 1,
+      "max_features": "sqrt",
+      "max_depth": 35
+    },
+    "optimal_threshold": 0.26,
+    "cross_validation": {
+      "cost_sensitive": {
+        "variant": "cost_sensitive",
+        "best_params": {
+          "n_estimators": 150,
+          "min_samples_split": 2,
+          "min_samples_leaf": 1,
+          "max_features": "sqrt",
+          "max_depth": 35
+        },
+        "cv_mean_ap": 0.3202428521036996,
+        "cv_std_ap": 0.13596142370407724,
+        "cv_mean_roc": 0.8793601631413093,
+        "oof_pr_auc": 0.2823580597982653,
+        "oof_roc_auc": 0.8804211314516874,
+        "default_f1": 0.07205882352941176,
+        "default_prec": 0.4,
+        "default_rec": 0.04,
+        "opt_threshold": 0.26,
+        "opt_f1": 0.32323232323232326,
+        "opt_prec": 0.6956521739130435,
+        "opt_rec": 0.21052631578947367
+      },
+      "resampled": {
+        "variant": "resampled",
+        "best_params": {
+          "n_estimators": 150,
+          "min_samples_split": 10,
+          "min_samples_leaf": 1,
+          "max_features": "log2",
+          "max_depth": 35
+        },
+        "cv_mean_ap": 0.2445460201140878,
+        "cv_std_ap": 0.12015814412931318,
+        "cv_mean_roc": 0.9145341501622648,
+        "oof_pr_auc": 0.2340390359847219,
+        "oof_roc_auc": 0.9150837256898194,
+        "default_f1": 0.23975710427323332,
+        "default_prec": 0.24821428571428572,
+        "default_rec": 0.25083333333333335,
+        "opt_threshold": 0.43,
+        "opt_f1": 0.2962962962962963,
+        "opt_prec": 0.24778761061946902,
+        "opt_rec": 0.3684210526315789
+      }
+    },
+    "test_metrics_default_threshold": {
+      "threshold": 0.5,
+      "precision": 1.0,
+      "recall": 0.09090909090909091,
+      "f1_score": 0.16666666666666666
+    },
+    "test_metrics_optimal_threshold": {
+      "threshold": 0.26,
+      "precision": 0.5,
+      "recall": 0.18181818181818182,
+      "f1_score": 0.26666666666666666,
+      "roc_auc": 0.9081226845346446,
+      "pr_auc": 0.2864276591836862,
+      "false_positive_rate": 1.0261804281737837e-05,
+      "confusion_matrix": {
+        "tn": 389791,
+        "fp": 4,
+        "fn": 18,
+        "tp": 4
+      },
+      "scenario_recall": {
+        "Scenario_1": {
+          "name": "Scenario 1 (ACM2278 - IP / Data Theft)",
+          "total_sessions": 1,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        },
+        "Scenario_2": {
+          "name": "Scenario 2 (CMP2946 - Sabotage / USB Leak)",
+          "total_sessions": 10,
+          "detected_default": 1,
+          "detected_optimal": 2,
+          "recall_optimal": 0.2
+        },
+        "Scenario_3": {
+          "name": "Scenario 3 (PLJ1771 - Keylogger / Mass Disgruntled)",
+          "total_sessions": 8,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        },
+        "Scenario_4": {
+          "name": "Scenario 4 (CDE1846 - Flight Risk Exfiltration)",
+          "total_sessions": 2,
+          "detected_default": 1,
+          "detected_optimal": 2,
+          "recall_optimal": 1.0
+        },
+        "Scenario_5": {
+          "name": "Scenario 5 (MBG3183 - Dropbox Cloud Upload [Zero-Shot])",
+          "total_sessions": 1,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        }
+      }
+    }
+  },
+  "XGBoost": {
+    "model_name": "XGBoost",
+    "dataset": "CERT r6.2",
+    "winning_strategy": "cost_sensitive",
+    "best_hyperparameters": {
+      "subsample": 0.75,
+      "scale_pos_weight": 25.0,
+      "reg_lambda": 10.0,
+      "reg_alpha": 0.0,
+      "n_estimators": 500,
+      "min_child_weight": 1,
+      "max_depth": 6,
+      "learning_rate": 0.1,
+      "colsample_bytree": 0.85
+    },
+    "optimal_threshold": 0.41000000000000003,
+    "cross_validation": {
+      "cost_sensitive": {
+        "variant": "cost_sensitive",
+        "best_params": {
+          "subsample": 0.75,
+          "scale_pos_weight": 25.0,
+          "reg_lambda": 10.0,
+          "reg_alpha": 0.0,
+          "n_estimators": 500,
+          "min_child_weight": 1,
+          "max_depth": 6,
+          "learning_rate": 0.1,
+          "colsample_bytree": 0.85
+        },
+        "cv_mean_ap": 0.4095690700455588,
+        "cv_std_ap": 0.10464825188862355,
+        "cv_mean_roc": 0.9549910075595293,
+        "oof_pr_auc": 0.3998502094330531,
+        "oof_roc_auc": 0.9520625804657104,
+        "default_f1": 0.4389591567852437,
+        "default_prec": 0.6888888888888889,
+        "default_rec": 0.32999999999999996,
+        "opt_threshold": 0.41000000000000003,
+        "opt_f1": 0.46875,
+        "opt_prec": 0.5769230769230769,
+        "opt_rec": 0.39473684210526316,
+        "mean_best_iteration": 128
+      },
+      "resampled": {
+        "variant": "resampled",
+        "best_params": {
+          "subsample": 0.85,
+          "scale_pos_weight": 1.0,
+          "reg_lambda": 1.0,
+          "reg_alpha": 1.0,
+          "n_estimators": 350,
+          "min_child_weight": 3,
+          "max_depth": 4,
+          "learning_rate": 0.1,
+          "colsample_bytree": 0.85
+        },
+        "cv_mean_ap": 0.20273524729734663,
+        "cv_std_ap": 0.04200542688130256,
+        "cv_mean_roc": 0.9301393921805051,
+        "oof_pr_auc": 0.10678425439609994,
+        "oof_roc_auc": 0.8511196421735852,
+        "default_f1": 0.06592595920970354,
+        "default_prec": 0.04314704274608043,
+        "default_rec": 0.43499999999999994,
+        "opt_threshold": 0.87,
+        "opt_f1": 0.20320855614973263,
+        "opt_prec": 0.17117117117117117,
+        "opt_rec": 0.25,
+        "mean_best_iteration": 93
+      }
+    },
+    "test_metrics_default_threshold": {
+      "threshold": 0.5,
+      "precision": 0.5,
+      "recall": 0.2727272727272727,
+      "f1_score": 0.35294117647058826
+    },
+    "test_metrics_optimal_threshold": {
+      "threshold": 0.41000000000000003,
+      "precision": 0.4117647058823529,
+      "recall": 0.3181818181818182,
+      "f1_score": 0.358974358974359,
+      "roc_auc": 0.9793545325106787,
+      "pr_auc": 0.3235631013218676,
+      "false_positive_rate": 2.5654510704344593e-05,
+      "confusion_matrix": {
+        "tn": 389785,
+        "fp": 10,
+        "fn": 15,
+        "tp": 7
+      },
+      "scenario_recall": {
+        "Scenario_1": {
+          "name": "Scenario 1 (ACM2278 - IP / Data Theft)",
+          "total_sessions": 1,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        },
+        "Scenario_2": {
+          "name": "Scenario 2 (CMP2946 - Sabotage / USB Leak)",
+          "total_sessions": 10,
+          "detected_default": 4,
+          "detected_optimal": 5,
+          "recall_optimal": 0.5
+        },
+        "Scenario_3": {
+          "name": "Scenario 3 (PLJ1771 - Keylogger / Mass Disgruntled)",
+          "total_sessions": 8,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        },
+        "Scenario_4": {
+          "name": "Scenario 4 (CDE1846 - Flight Risk Exfiltration)",
+          "total_sessions": 2,
+          "detected_default": 2,
+          "detected_optimal": 2,
+          "recall_optimal": 1.0
+        },
+        "Scenario_5": {
+          "name": "Scenario 5 (MBG3183 - Dropbox Cloud Upload [Zero-Shot])",
+          "total_sessions": 1,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        }
+      }
+    }
+  },
+  "CatBoost": {
+    "model_name": "CatBoost",
+    "dataset": "CERT r6.2",
+    "winning_strategy": "resampled",
+    "best_hyperparameters": {
+      "random_strength": 1.0,
+      "learning_rate": 0.03,
+      "l2_leaf_reg": 1,
+      "iterations": 300,
+      "depth": 8,
+      "auto_class_weights": "None"
+    },
+    "optimal_threshold": 0.8200000000000001,
+    "cross_validation": {
+      "cost_sensitive": {
+        "variant": "cost_sensitive",
+        "best_params": {
+          "random_strength": 0.1,
+          "learning_rate": 0.03,
+          "l2_leaf_reg": 3,
+          "iterations": 500,
+          "depth": 4,
+          "auto_class_weights": "None"
+        },
+        "cv_mean_ap": 0.16692526630105914,
+        "cv_std_ap": 0.1552027470528135,
+        "cv_mean_roc": 0.8793877363956268,
+        "oof_pr_auc": 0.09480103368000478,
+        "oof_roc_auc": 0.7680035423478333,
+        "default_f1": 0.08421052631578947,
+        "default_prec": 0.2,
+        "default_rec": 0.05333333333333333,
+        "opt_threshold": 0.2,
+        "opt_f1": 0.16666666666666666,
+        "opt_prec": 0.875,
+        "opt_rec": 0.09210526315789473,
+        "mean_best_iteration": 161
+      },
+      "resampled": {
+        "variant": "resampled",
+        "best_params": {
+          "random_strength": 1.0,
+          "learning_rate": 0.03,
+          "l2_leaf_reg": 1,
+          "iterations": 300,
+          "depth": 8,
+          "auto_class_weights": "None"
+        },
+        "cv_mean_ap": 0.26524963140252467,
+        "cv_std_ap": 0.05824460364710345,
+        "cv_mean_roc": 0.95311183335685,
+        "oof_pr_auc": 0.07515898942836961,
+        "oof_roc_auc": 0.9118522193852234,
+        "default_f1": 0.019667955928730434,
+        "default_prec": 0.010145101977593204,
+        "default_rec": 0.6591666666666667,
+        "opt_threshold": 0.8200000000000001,
+        "opt_f1": 0.13829787234042554,
+        "opt_prec": 0.11607142857142858,
+        "opt_rec": 0.17105263157894737,
+        "mean_best_iteration": 20
+      }
+    },
+    "test_metrics_default_threshold": {
+      "threshold": 0.5,
+      "precision": 0.016726403823178016,
+      "recall": 0.6363636363636364,
+      "f1_score": 0.03259604190919674
+    },
+    "test_metrics_optimal_threshold": {
+      "threshold": 0.8200000000000001,
+      "precision": 0.06030150753768844,
+      "recall": 0.5454545454545454,
+      "f1_score": 0.1085972850678733,
+      "roc_auc": 0.9621264790700007,
+      "pr_auc": 0.1276457417334417,
+      "false_positive_rate": 0.00047973935017124386,
+      "confusion_matrix": {
+        "tn": 389608,
+        "fp": 187,
+        "fn": 10,
+        "tp": 12
+      },
+      "scenario_recall": {
+        "Scenario_1": {
+          "name": "Scenario 1 (ACM2278 - IP / Data Theft)",
+          "total_sessions": 1,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        },
+        "Scenario_2": {
+          "name": "Scenario 2 (CMP2946 - Sabotage / USB Leak)",
+          "total_sessions": 10,
+          "detected_default": 10,
+          "detected_optimal": 9,
+          "recall_optimal": 0.9
+        },
+        "Scenario_3": {
+          "name": "Scenario 3 (PLJ1771 - Keylogger / Mass Disgruntled)",
+          "total_sessions": 8,
+          "detected_default": 2,
+          "detected_optimal": 1,
+          "recall_optimal": 0.125
+        },
+        "Scenario_4": {
+          "name": "Scenario 4 (CDE1846 - Flight Risk Exfiltration)",
+          "total_sessions": 2,
+          "detected_default": 2,
+          "detected_optimal": 2,
+          "recall_optimal": 1.0
+        },
+        "Scenario_5": {
+          "name": "Scenario 5 (MBG3183 - Dropbox Cloud Upload [Zero-Shot])",
+          "total_sessions": 1,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        }
+      }
+    }
+  },
+  "Stacking_Ensemble": {
+    "model_name": "Stacking Ensemble",
+    "dataset": "CERT r6.2",
+    "winning_meta_learner": "Optimal_Soft_Voting",
+    "meta_features_type": "voting",
+    "optimal_threshold": 0.35000000000000003,
+    "cross_validation": {
+      "oof_pr_auc": 0.41265465203545665,
+      "oof_roc_auc": 0.9437352275588855,
+      "opt_threshold": 0.35000000000000003,
+      "opt_f1": 0.46956521739130436,
+      "opt_prec": 0.6923076923076923,
+      "opt_rec": 0.35526315789473684
+    },
+    "test_metrics_default_threshold": {
+      "threshold": 0.5,
+      "precision": 1.0,
+      "recall": 0.18181818181818182,
+      "f1_score": 0.3076923076923077
+    },
+    "test_metrics_optimal_threshold": {
+      "threshold": 0.35000000000000003,
+      "precision": 0.5,
+      "recall": 0.2727272727272727,
+      "f1_score": 0.35294117647058826,
+      "roc_auc": 0.9696020868778343,
+      "pr_auc": 0.3322001449004074,
+      "false_positive_rate": 1.5392706422606756e-05,
+      "confusion_matrix": {
+        "tn": 389789,
+        "fp": 6,
+        "fn": 16,
+        "tp": 6
+      },
+      "scenario_recall": {
+        "Scenario_1": {
+          "name": "Scenario 1 (ACM2278 - IP / Data Theft)",
+          "total_sessions": 1,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        },
+        "Scenario_2": {
+          "name": "Scenario 2 (CMP2946 - Sabotage / USB Leak)",
+          "total_sessions": 10,
+          "detected_default": 2,
+          "detected_optimal": 4,
+          "recall_optimal": 0.4
+        },
+        "Scenario_3": {
+          "name": "Scenario 3 (PLJ1771 - Keylogger / Mass Disgruntled)",
+          "total_sessions": 8,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        },
+        "Scenario_4": {
+          "name": "Scenario 4 (CDE1846 - Flight Risk Exfiltration)",
+          "total_sessions": 2,
+          "detected_default": 2,
+          "detected_optimal": 2,
+          "recall_optimal": 1.0
+        },
+        "Scenario_5": {
+          "name": "Scenario 5 (MBG3183 - Dropbox Cloud Upload [Zero-Shot])",
+          "total_sessions": 1,
+          "detected_default": 0,
+          "detected_optimal": 0,
+          "recall_optimal": 0.0
+        }
+      }
+    }
+  }
+}

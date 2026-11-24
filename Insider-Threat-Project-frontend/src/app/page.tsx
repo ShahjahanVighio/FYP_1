@@ -371,13 +371,12 @@ export default function OverviewPage() {
                       </td>
                       <td>
                         <span
-                          className={`text-[9px] font-semibold uppercase px-2 py-0.5 rounded border ${
-                            s.disposition === "Escalated"
+                          className={`text-[9px] font-semibold uppercase px-2 py-0.5 rounded border ${s.disposition === "Escalated"
                               ? "bg-red-50 text-red-700 border-red-200"
                               : s.disposition === "Unreviewed"
-                              ? "bg-amber-50 text-amber-700 border-amber-200"
-                              : "bg-slate-100 text-slate-700 border-slate-200"
-                          }`}
+                                ? "bg-amber-50 text-amber-700 border-amber-200"
+                                : "bg-slate-100 text-slate-700 border-slate-200"
+                            }`}
                         >
                           {s.disposition}
                         </span>
