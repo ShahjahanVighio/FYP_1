@@ -140,6 +140,40 @@ flowchart LR
 
 All models were evaluated on the **exact same untouched test set (`X_test`, `94,123` sessions, `223` malicious threats)**. Decision thresholds ($T^*$) were optimized strictly on out-of-fold cross-validation to guarantee zero test leakage:
 
+### 4-Column Publication Tables
+
+#### Optimal Threshold ($T^*$) Performance:
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest ($T^*=0.22$) | 82.97% | 67.71% | 74.57% |
+| XGBoost ($T^*=0.29$) | 92.54% | 83.41% | 87.74% |
+| CatBoost ($T^*=0.62$) | 87.38% | 83.86% | 85.58% |
+| **Meta Learner ($T^*=0.34$)** | **91.26%** | **84.30%** | **87.65%** |
+
+*Note: Stacking Meta-Learner achieves peak **PR-AUC = 0.9238** and **ROC-AUC = 0.9987**, capturing 188/223 threats with only 18 false alarms across 93,900 benign sessions (0.0192% FPR).*
+
+#### Default Threshold ($T = 0.50$) Performance:
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest | 98.84% | 38.12% | 55.02% |
+| XGBoost | 96.09% | 77.13% | 85.57% |
+| CatBoost | 80.51% | 85.20% | 82.79% |
+| **Meta Learner** | **95.81%** | **82.06%** | **88.41%** |
+
+*Note: At default threshold $T=0.50$, the Meta Learner achieves **95.81% Precision** and an outstanding **88.41% F1-Score**.*
+
+#### Combined Overview:
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest ($T^*=0.22$) | 82.97% | 67.71% | 74.57% |
+| XGBoost ($T^*=0.29$) | 92.54% | 83.41% | 87.74% |
+| CatBoost ($T^*=0.62$) | 87.38% | 83.86% | 85.58% |
+| **Meta Learner ($T=0.50$ / $T^*=0.34$)** | **95.81% / 91.26%** | **82.06% / 84.30%** | **88.41% / 87.65%** |
+
+---
+
+### Detailed Benchmark Telemetry
+
 | Model | Architecture & Strategy | Optimal Threshold ($T^*$) | Precision | Recall | F1-Score | PR-AUC (Avg Prec) | ROC-AUC | False Positive Rate (FPR) | False Positives (FP) | Threats Intercepted (TP / 223) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Random Forest** | Cost-Sensitive (`balanced_subsample`) | `0.22` | 82.97% | 67.71% | 74.57% | 0.8086 | 0.9892 | 0.0330% | 31 | 151 |
@@ -349,6 +383,7 @@ npm run dev
 - **Muhammad Muteeb** — F23CSC048
 - **Bilal Naeem** — F23CSC008
 
+- **Institution**: Salim Habib University
 - **Department**: Department of Computer Science & Software Engineering
 - **Dataset Reference**: Glasser, J., & Lindauer, B. (2013). *Bridging the gap: A pragmatic approach to generating insider threat synthetic data*. Carnegie Mellon University, Software Engineering Institute (SEI).
 

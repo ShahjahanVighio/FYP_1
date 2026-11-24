@@ -81,8 +81,23 @@ flowchart TD
 
 All evaluations were executed on the **strictly untouched test set (`200,892` sessions, `369` ground-truth threats, `543.1 : 1` class imbalance)**:
 
+### 4-Column Publication Table
+
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest | 70.15% | 63.69% | 66.76% |
+| XGBoost | 82.46% | 72.63% | 77.23% |
+| CatBoost | 82.14% | 74.80% | 78.30% |
+| **Meta Learner** | **79.28%** | **77.78%** | **78.52%** |
+
+*Note: Evaluated at optimal thresholds (RF $T^*=0.14$, XGB $T^*=0.25$, CatBoost $T^*=0.65$, Meta Learner $T^*=0.42$). Meta Learner delivers highest **PR-AUC = 0.8683**, **ROC-AUC = 0.9989**, and highest threat interception (287/369 threats caught, 75 false alarms out of 200,892 test sessions, 0.0374% FPR).*
+
+---
+
+### Detailed Benchmark Telemetry
+
 | Model Architecture | Optimal Threshold ($T^*$) | Test PR-AUC | Test ROC-AUC | Precision (%) | Recall (%) | F1-Score (%) | Threats Caught | False Alarms (FPs) | False Positive Rate |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Random Forest** | $0.14$ | `0.6962` | `0.9763` | 70.15% | 63.69% | 66.76% | 235 / 369 | 100 | 0.0499% |
 | **XGBoost** | $0.25$ | `0.8378` | `0.9987` | **82.46%** | 72.63% | 77.23% | 268 / 369 | **57** | **0.0284%** |
 | **CatBoost** | $0.65$ | `0.8532` | `0.9984` | 82.14% | 74.80% | 78.30% | 276 / 369 | 60 | 0.0299% |
@@ -232,5 +247,6 @@ python train_meta_learner.py
 - **Muhammad Muteeb** — F23CSC048
 - **Bilal Naeem** — F23CSC008
 
+- **Institution**: Salim Habib University
 - **Department**: Department of Computer Science & Software Engineering
 - **Dataset Reference**: Glasser, J., & Lindauer, B. (2013). *Bridging the gap: A pragmatic approach to generating insider threat synthetic data*. Carnegie Mellon University, Software Engineering Institute (SEI).

@@ -72,6 +72,71 @@ The table below summarizes dataset characteristics and empirical test results ac
 
 ---
 
+## 🏆 4-Model Empirical Leaderboards across Benchmark Releases
+
+All evaluations below were performed on **strictly isolated 20% test partitions** ($X_{\text{test}}$) that were kept untouched during training, cross-validation, and feature selection.
+
+### 1. CERT r4.2 Benchmark (`470,611` Sessions | 1,000 Employees | Imbalance 421.5:1)
+
+*Optimal Threshold ($T^*$) & Default Threshold ($T = 0.50$):*
+
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest ($T^*=0.22$) | 82.97% | 67.71% | 74.57% |
+| XGBoost ($T^*=0.29$) | 92.54% | 83.41% | 87.74% |
+| CatBoost ($T^*=0.62$) | 87.38% | 83.86% | 85.58% |
+| **Meta Learner ($T=0.50$ / $T^*=0.34$)** | **95.81% / 91.26%** | **82.06% / 84.30%** | **88.41% / 87.65%** |
+
+*Single-Value Publication Tables:*
+
+**Optimal Threshold ($T^*$):**
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest ($T^*=0.22$) | 82.97% | 67.71% | 74.57% |
+| XGBoost ($T^*=0.29$) | 92.54% | 83.41% | 87.74% |
+| CatBoost ($T^*=0.62$) | 87.38% | 83.86% | 85.58% |
+| **Meta Learner ($T^*=0.34$)** | **91.26%** | **84.30%** | **87.65%** |
+
+*Note: Stacking Meta-Learner achieves peak **PR-AUC = 0.9238** and **ROC-AUC = 0.9987**, capturing 188/223 threats with only 18 false alarms across 93,900 benign sessions (0.0192% FPR).*
+
+**Default Threshold ($T = 0.50$):**
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest | 98.84% | 38.12% | 55.02% |
+| XGBoost | 96.09% | 77.13% | 85.57% |
+| CatBoost | 80.51% | 85.20% | 82.79% |
+| **Meta Learner** | **95.81%** | **82.06%** | **88.41%** |
+
+*Note: At default threshold $T=0.50$, the Meta Learner achieves **95.81% Precision** and an outstanding **88.41% F1-Score**.*
+
+---
+
+### 2. CERT r5.2 Benchmark (`1,004,460` Sessions | 2,000 Employees | Imbalance 543.1:1)
+
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest | 70.15% | 63.69% | 66.76% |
+| XGBoost | 82.46% | 72.63% | 77.23% |
+| CatBoost | 82.14% | 74.80% | 78.30% |
+| **Meta Learner** | **79.28%** | **77.78%** | **78.52%** |
+
+*Note: Evaluated at optimal thresholds (RF $T^*=0.14$, XGB $T^*=0.25$, CatBoost $T^*=0.65$, Meta Learner $T^*=0.42$). Meta Learner delivers highest **PR-AUC = 0.8683**, **ROC-AUC = 0.9989**, and highest threat interception (287/369 threats caught, 75 false alarms out of 200,892 test sessions, 0.0374% FPR).*
+
+---
+
+### 3. CERT r6.2 Benchmark (`1,949,073` Sessions | 4,000 Employees | Imbalance 19,887.5:1)
+
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest | 50.00% | 18.18% | 26.67% |
+| XGBoost | 41.18% | 31.82% | 35.90% |
+| CatBoost | 6.03% | 54.55% | 10.86% |
+| **Meta Learner** | **50.00%** | **27.27%** | **35.29%** |
+
+*Note: Evaluated at optimal thresholds (RF $T^*=0.26$, XGB $T^*=0.41$, CatBoost $T^*=0.82$, Meta Learner $T^*=0.35$). At default threshold $T=0.50$, the Meta Learner achieves **100.00% Precision** with **0 false alarms** across 389,795 benign sessions, and overall highest **PR-AUC = 0.3322** (ROC-AUC = 0.9696).*
+
+---
+
 ## 🔬 Core Empirical Findings & Scientific Contributions
 
 ### 1. Cost-Sensitive Loss Weighting Consistently Dominates Resampling

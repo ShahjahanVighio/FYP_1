@@ -89,8 +89,23 @@ flowchart TD
 
 All evaluations were executed on the **strictly untouched evaluation partition (`389,817` test sessions, `22` ground-truth threats, `19,887.5 : 1` class imbalance)**:
 
+### 4-Column Publication Table
+
+| Model | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: |
+| Random Forest | 50.00% | 18.18% | 26.67% |
+| XGBoost | 41.18% | 31.82% | 35.90% |
+| CatBoost | 6.03% | 54.55% | 10.86% |
+| **Meta Learner** | **50.00%** | **27.27%** | **35.29%** |
+
+*Note: Evaluated at optimal thresholds (RF $T^*=0.26$, XGB $T^*=0.41$, CatBoost $T^*=0.82$, Meta Learner $T^*=0.35$). At default threshold $T=0.50$, the Meta Learner achieves **100.00% Precision** with **0 false alarms** across 389,795 benign sessions, and overall highest **PR-AUC = 0.3322** (ROC-AUC = 0.9696).*
+
+---
+
+### Detailed Benchmark Telemetry
+
 | Model Architecture | Optimal Cutoff ($T^*$) | Test PR-AUC | Test ROC-AUC | Precision (%) | Recall (%) | F1-Score (%) | Threats Caught | False Alarms (FPs) | False Positive Rate |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Random Forest** | $0.26$ | `0.2864` | `0.9081` | **50.00%** | 18.18% | 26.67% | 4 / 22 | **4** | **0.00103%** |
 | **XGBoost** | $0.41$ | `0.3236` | **`0.9794`** | 41.18% | 31.82% | 35.90% | 7 / 22 | 10 | 0.00257% |
 | **CatBoost** | $0.82$ | `0.1276` | `0.9621` | 6.03% | **54.55%** | 10.86% | **12 / 22** | 187 | 0.04797% |
