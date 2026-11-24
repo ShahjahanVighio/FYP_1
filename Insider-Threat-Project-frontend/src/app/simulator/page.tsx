@@ -156,7 +156,7 @@ export default function SimulatorPage() {
               >
                 <div className="flex items-center justify-between">
                   <span className={`text-xs font-bold ${isSelected ? "text-blue-900" : "text-slate-900"}`}>
-                    {p.title}
+                    {p.title || p.name}
                   </span>
                   {isSelected && (
                     <span className="w-2 h-2 rounded-full bg-blue-600" />

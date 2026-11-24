@@ -13,7 +13,9 @@ import {
   ShieldAlert,
   Download,
   RefreshCw,
-  ExternalLink
+  ExternalLink,
+  Layers,
+  Shield
 } from "lucide-react";
 import { useDataset } from "@/context/DatasetContext";
 import triageData from "@/data/triage_queue.json";
@@ -23,29 +25,41 @@ export default function QueuePage() {
   const { dataset } = useDataset();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [scenarioFilter, setScenarioFilter] = useState("All");
   const [selectedSession, setSelectedSession] = useState<TriageSession | null>(null);
 
-  // Load sessions for active dataset
-  const rawSessions = (triageData as any)[dataset] || [];
+  // Active key for queue data
+  const activeQueueKey = dataset === "cross_release" ? "r6.2" : dataset;
+  const rawSessions = (triageData as any)[activeQueueKey] || (triageData as any)["r6.2"] || [];
   const [sessions, setSessions] = useState<TriageSession[]>(rawSessions);
 
   // Sync when dataset changes
   useMemo(() => {
-    setSessions((triageData as any)[dataset] || []);
+    const key = dataset === "cross_release" ? "r6.2" : dataset;
+    setSessions((triageData as any)[key] || (triageData as any)["r6.2"] || []);
   }, [dataset]);
 
   const filteredSessions = useMemo(() => {
     return sessions.filter((s) => {
       const matchStatus = statusFilter === "All" || s.disposition === statusFilter;
+      const matchScenario =
+        scenarioFilter === "All" ||
+        (scenarioFilter === "Scenario 1" && s.ground_truth.includes("Scenario 1")) ||
+        (scenarioFilter === "Scenario 2" && s.ground_truth.includes("Scenario 2")) ||
+        (scenarioFilter === "Scenario 3" && s.ground_truth.includes("Scenario 3")) ||
+        (scenarioFilter === "Scenario 4" && s.ground_truth.includes("Scenario 4")) ||
+        (scenarioFilter === "Scenario 5" && s.ground_truth.includes("Scenario 5")) ||
+        (scenarioFilter === "Benign" && s.ground_truth.includes("Benign"));
+
       const matchSearch =
         s.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         s.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         s.workstation.toLowerCase().includes(searchTerm.toLowerCase()) ||
         s.trigger.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchStatus && matchSearch;
+      return matchStatus && matchScenario && matchSearch;
     });
-  }, [sessions, statusFilter, searchTerm]);
+  }, [sessions, statusFilter, scenarioFilter, searchTerm]);
 
   const handleUpdateDisposition = (id: string, newDisp: string) => {
     setSessions((prev) =>
@@ -71,22 +85,30 @@ export default function QueuePage() {
       {/* Page Title & Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-            Security Triage Queue
-          </h1>
+          <div className="flex items-center space-x-2">
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              Security Triage Queue
+            </h1>
+            <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+              {dataset === "cross_release" ? "CERT r6.2 Active Stream" : `CERT ${dataset}`}
+            </span>
+          </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Real-time flagged session queue for SOC Level-1 & Level-2 analyst triage (CERT {dataset}).
+            Real-time flagged session queue for SOC Level-1 & Level-2 analyst triage. Click any session to inspect individual model probability contributions.
           </p>
         </div>
 
         <div className="flex items-center space-x-2">
           <button
-            onClick={() => setSessions((triageData as any)[dataset] || [])}
+            onClick={() => {
+              const key = dataset === "cross_release" ? "r6.2" : dataset;
+              setSessions((triageData as any)[key] || []);
+            }}
             className="p-1.5 rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-xs flex items-center space-x-1 cursor-pointer"
             title="Refresh queue"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Refresh</span>
+            <span className="hidden sm:inline">Refresh Queue</span>
           </button>
         </div>
       </div>
@@ -95,7 +117,7 @@ export default function QueuePage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
         <div className="enterprise-card p-3.5">
           <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-            Total Flagged
+            Total In Queue
           </div>
           <div className="mt-1 text-2xl font-bold text-slate-900 font-mono tabular-nums">
             {counts.total}
@@ -138,7 +160,7 @@ export default function QueuePage() {
       <div className="enterprise-card p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Status Filter Tabs */}
         <div className="flex items-center space-x-1 w-full sm:w-auto overflow-x-auto">
-          {["All", "Unreviewed", "Escalated", "False Positive", "Resolved"].map((status) => (
+          {["All", "Unreviewed", "Escalated", "Resolved"].map((status) => (
             <button
               key={status}
               onClick={() => setStatusFilter(status)}
@@ -153,16 +175,33 @@ export default function QueuePage() {
           ))}
         </div>
 
-        {/* Search Input */}
-        <div className="relative w-full sm:w-64">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-          <input
-            type="text"
-            placeholder="Search User, PC, ID, Trigger..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 rounded-md border border-slate-200 bg-white text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
-          />
+        {/* Scenario Filter & Search */}
+        <div className="flex items-center space-x-2 w-full sm:w-auto">
+          <select
+            value={scenarioFilter}
+            onChange={(e) => setScenarioFilter(e.target.value)}
+            className="text-xs px-2.5 py-1.5 rounded-md border border-slate-200 bg-white text-slate-700 font-medium"
+          >
+            <option value="All">All Scenarios</option>
+            <option value="Scenario 1">Scenario 1 (USB Theft)</option>
+            <option value="Scenario 2">Scenario 2 (Sabotage)</option>
+            <option value="Scenario 3">Scenario 3 (Keylogger)</option>
+            <option value="Scenario 4">Scenario 4 (Email/Cloud)</option>
+            <option value="Scenario 5">Scenario 5 (Dropbox Zero-Shot)</option>
+            <option value="Benign">Benign Baseline</option>
+          </select>
+
+          {/* Search Input */}
+          <div className="relative w-full sm:w-64">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              placeholder="Search User, PC, ID, Trigger..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-8 pr-3 py-1.5 rounded-md border border-slate-200 bg-white text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+          </div>
         </div>
       </div>
 
@@ -198,7 +237,7 @@ export default function QueuePage() {
                     <tr
                       key={s.id}
                       onClick={() => setSelectedSession(s)}
-                      className="cursor-pointer transition-colors"
+                      className="cursor-pointer transition-colors hover:bg-slate-50"
                     >
                       <td className="font-mono text-xs font-semibold text-blue-700">
                         {s.id}
@@ -256,7 +295,7 @@ export default function QueuePage() {
                             e.stopPropagation();
                             setSelectedSession(s);
                           }}
-                          className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors"
+                          className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
                         >
                           Inspect →
                         </button>

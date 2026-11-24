@@ -410,5 +410,883 @@
         }
       ]
     }
+  ],
+  "r6.2": [
+    {
+      "id": "SES-62-00412",
+      "user_id": "ACM2278",
+      "name": "A. C. Mercer",
+      "department": "System Administration",
+      "workstation": "PC-2278",
+      "timestamp": "2010-08-19 22:14:08",
+      "is_afterhours": true,
+      "trigger": "Mass USB Exfiltration (Off-Hours)",
+      "rf_prob": 0.742,
+      "xgb_prob": 0.915,
+      "cb_prob": 0.884,
+      "ensemble_prob": 0.912,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 1 (USB Theft)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "7 devices",
+          "baseline": "0.01 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "USB Connection Duration (usb_mean_usb_dur)",
+          "val": "4,120 sec",
+          "baseline": "35 sec avg",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Copied Documents to Disk (file_docf_n-disk1)",
+          "val": "48 files",
+          "baseline": "0.05 files avg",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Thursday 22:14)",
+          "baseline": "Business Hours",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-00489",
+      "user_id": "ACM2278",
+      "name": "A. C. Mercer",
+      "department": "System Administration",
+      "workstation": "PC-2278",
+      "timestamp": "2010-08-20 23:45:12",
+      "is_afterhours": true,
+      "trigger": "Consecutive Nightly Flash Drive Mounts",
+      "rf_prob": 0.81,
+      "xgb_prob": 0.938,
+      "cb_prob": 0.902,
+      "ensemble_prob": 0.9315,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 1 (USB Theft)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "9 devices",
+          "baseline": "0.01 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "File Transfer Volume (file_docf_mean_file_nwords)",
+          "val": "5,820 words",
+          "baseline": "280 words avg",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Off-Hours Work Ratio",
+          "val": "100% (Friday 23:45)",
+          "baseline": "0%",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-00561",
+      "user_id": "ACM2278",
+      "name": "A. C. Mercer",
+      "department": "System Administration",
+      "workstation": "PC-2278",
+      "timestamp": "2010-08-23 02:18:40",
+      "is_afterhours": true,
+      "trigger": "Late Night Archival Exfiltration",
+      "rf_prob": 0.695,
+      "xgb_prob": 0.884,
+      "cb_prob": 0.86,
+      "ensemble_prob": 0.879,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 1 (USB Theft)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "5 devices",
+          "baseline": "0.01 / session",
+          "risk": "HIGH"
+        },
+        {
+          "name": "File Word Count (file_docf_mean_file_nwords)",
+          "val": "3,910 words",
+          "baseline": "280 words avg",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Monday 02:18)",
+          "baseline": "Business Hours",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-01204",
+      "user_id": "CMP2946",
+      "name": "C. M. Phelps",
+      "department": "Hardware Engineering",
+      "workstation": "PC-2946",
+      "timestamp": "2011-02-14 13:12:00",
+      "is_afterhours": false,
+      "trigger": "Job Search Activity Surge Post-Review",
+      "rf_prob": 0.38,
+      "xgb_prob": 0.582,
+      "cb_prob": 0.84,
+      "ensemble_prob": 0.612,
+      "disposition": "Investigating",
+      "ground_truth": "Scenario 2 (Sabotage)",
+      "factors": [
+        {
+          "name": "Job Search Browsing (http_n_jobf)",
+          "val": "34 visits",
+          "baseline": "0.1 visits/day",
+          "risk": "HIGH"
+        },
+        {
+          "name": "URL Depth Variance (http_cloudf_mean_url_depth)",
+          "val": "4.8 levels",
+          "baseline": "1.8 levels",
+          "risk": "MEDIUM"
+        },
+        {
+          "name": "Session Duration",
+          "val": "8.2 hours",
+          "baseline": "7.5 hours",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-01450",
+      "user_id": "CMP2946",
+      "name": "C. M. Phelps",
+      "department": "Hardware Engineering",
+      "workstation": "PC-2946",
+      "timestamp": "2011-02-28 11:20:15",
+      "is_afterhours": false,
+      "trigger": "Unauthorized Script Execution & USB Probe",
+      "rf_prob": 0.44,
+      "xgb_prob": 0.69,
+      "cb_prob": 0.912,
+      "ensemble_prob": 0.724,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 2 (Sabotage)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "3 devices",
+          "baseline": "0.01 / session",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Job Search Browsing (http_n_jobf)",
+          "val": "52 visits",
+          "baseline": "0.1 visits/day",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "USB Connection Duration (usb_mean_usb_dur)",
+          "val": "1,840 sec",
+          "baseline": "35 sec avg",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-01588",
+      "user_id": "CMP2946",
+      "name": "C. M. Phelps",
+      "department": "Hardware Engineering",
+      "workstation": "PC-2946",
+      "timestamp": "2011-03-03 14:45:00",
+      "is_afterhours": false,
+      "trigger": "Host Configuration Tampering & Pre-Exit Erasure",
+      "rf_prob": 0.49,
+      "xgb_prob": 0.73,
+      "cb_prob": 0.935,
+      "ensemble_prob": 0.768,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 2 (Sabotage)",
+      "factors": [
+        {
+          "name": "USB Connection Duration (usb_mean_usb_dur)",
+          "val": "2,400 sec",
+          "baseline": "35 sec avg",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "4 devices",
+          "baseline": "0.01 / session",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Job Search Activity (http_n_jobf)",
+          "val": "41 visits",
+          "baseline": "0.1 visits/day",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-02110",
+      "user_id": "PLJ1771",
+      "name": "P. L. Jenkins",
+      "department": "Information Technology",
+      "workstation": "PC-1771",
+      "timestamp": "2010-08-12 08:35:10",
+      "is_afterhours": false,
+      "trigger": "Anomalous Sysadmin Tool Deployment",
+      "rf_prob": 0.22,
+      "xgb_prob": 0.38,
+      "cb_prob": 0.89,
+      "ensemble_prob": 0.485,
+      "disposition": "Investigating",
+      "ground_truth": "Scenario 3 (Keylogger Tampering)",
+      "factors": [
+        {
+          "name": "Concurrent Host Logins (n_concurrent_sessions)",
+          "val": "3 hosts",
+          "baseline": "1 host",
+          "risk": "HIGH"
+        },
+        {
+          "name": "URL Depth Variance (http_cloudf_mean_url_depth)",
+          "val": "6.1 levels",
+          "baseline": "1.8 levels",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Web Search Queries (http_n_http)",
+          "val": "240 requests",
+          "baseline": "45 requests",
+          "risk": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-02195",
+      "user_id": "PLJ1771",
+      "name": "P. L. Jenkins",
+      "department": "Information Technology",
+      "workstation": "PC-1771",
+      "timestamp": "2010-08-12 15:40:22",
+      "is_afterhours": false,
+      "trigger": "Executive Credential Harvesting & Exfil",
+      "rf_prob": 0.31,
+      "xgb_prob": 0.49,
+      "cb_prob": 0.945,
+      "ensemble_prob": 0.582,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 3 (Keylogger Tampering)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "2 devices",
+          "baseline": "0.01 / session",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Concurrent Host Logins (n_concurrent_sessions)",
+          "val": "4 hosts",
+          "baseline": "1 host",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Copied Documents to Disk (file_docf_n-disk1)",
+          "val": "19 files",
+          "baseline": "0.05 files avg",
+          "risk": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-03102",
+      "user_id": "CDE1846",
+      "name": "C. D. Edwards",
+      "department": "Corporate Strategy",
+      "workstation": "PC-1846",
+      "timestamp": "2011-04-21 13:15:30",
+      "is_afterhours": false,
+      "trigger": "Mass External Email Outbound Spill",
+      "rf_prob": 0.88,
+      "xgb_prob": 0.965,
+      "cb_prob": 0.92,
+      "ensemble_prob": 0.958,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 4 (Email/Cloud Exfil)",
+      "factors": [
+        {
+          "name": "External Email Recipients (email_n_external)",
+          "val": "46 recipients",
+          "baseline": "0.2 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Outbound Email Attachments (email_n_attach)",
+          "val": "32 attachments",
+          "baseline": "0.1 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Cloud Storage URL Depth (http_cloudf_mean_url_depth)",
+          "val": "5.2 levels",
+          "baseline": "1.8 levels",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-03244",
+      "user_id": "CDE1846",
+      "name": "C. D. Edwards",
+      "department": "Corporate Strategy",
+      "workstation": "PC-1846",
+      "timestamp": "2011-04-22 16:40:11",
+      "is_afterhours": false,
+      "trigger": "Compressed Intellectual Property Uploads",
+      "rf_prob": 0.91,
+      "xgb_prob": 0.98,
+      "cb_prob": 0.94,
+      "ensemble_prob": 0.972,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 4 (Email/Cloud Exfil)",
+      "factors": [
+        {
+          "name": "External Email Recipients (email_n_external)",
+          "val": "68 recipients",
+          "baseline": "0.2 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Outbound Email Attachments (email_n_attach)",
+          "val": "54 attachments",
+          "baseline": "0.1 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Document Word Count (file_docf_mean_file_nwords)",
+          "val": "8,420 words",
+          "baseline": "280 words avg",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-03388",
+      "user_id": "CDE1846",
+      "name": "C. D. Edwards",
+      "department": "Corporate Strategy",
+      "workstation": "PC-1846",
+      "timestamp": "2011-04-25 11:22:45",
+      "is_afterhours": false,
+      "trigger": "Final Batch Exfiltration Prior to Resignation",
+      "rf_prob": 0.895,
+      "xgb_prob": 0.97,
+      "cb_prob": 0.935,
+      "ensemble_prob": 0.964,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 4 (Email/Cloud Exfil)",
+      "factors": [
+        {
+          "name": "External Email Recipients (email_n_external)",
+          "val": "58 recipients",
+          "baseline": "0.2 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Outbound Email Attachments (email_n_attach)",
+          "val": "41 attachments",
+          "baseline": "0.1 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Cloud File Depth (http_cloudf_mean_url_depth)",
+          "val": "5.7 levels",
+          "baseline": "1.8 levels",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-04101",
+      "user_id": "MBG3183",
+      "name": "M. B. Garcia",
+      "department": "Human Resources",
+      "workstation": "PC-3183",
+      "timestamp": "2010-10-12 13:22:15",
+      "is_afterhours": false,
+      "trigger": "Unapproved Cloud Drive Upload (Zero-Shot Dropbox)",
+      "rf_prob": 0.18,
+      "xgb_prob": 0.285,
+      "cb_prob": 0.34,
+      "ensemble_prob": 0.294,
+      "disposition": "Investigating",
+      "ground_truth": "Scenario 5 (Dropbox Zero-Shot)",
+      "factors": [
+        {
+          "name": "Cloud Storage Activity (http_n_cloudf)",
+          "val": "12 requests",
+          "baseline": "0 requests",
+          "risk": "HIGH"
+        },
+        {
+          "name": "URL Depth Variance (http_cloudf_mean_url_depth)",
+          "val": "4.2 levels",
+          "baseline": "1.8 levels",
+          "risk": "MEDIUM"
+        },
+        {
+          "name": "Copied Documents to Disk (file_docf_n-disk1)",
+          "val": "6 files",
+          "baseline": "0.05 files avg",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-08910",
+      "user_id": "KJH0124",
+      "name": "K. J. Howard",
+      "department": "DevOps & Infrastructure",
+      "workstation": "PC-0124",
+      "timestamp": "2011-01-18 23:45:00",
+      "is_afterhours": true,
+      "trigger": "Maintenance Window Server Patching",
+      "rf_prob": 0.28,
+      "xgb_prob": 0.31,
+      "cb_prob": 0.36,
+      "ensemble_prob": 0.312,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Scheduled Patching)",
+      "factors": [
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Overtime Shift)",
+          "baseline": "Business Hours",
+          "risk": "MEDIUM"
+        },
+        {
+          "name": "Concurrent Host Logins (n_concurrent_sessions)",
+          "val": "2 hosts",
+          "baseline": "1 host",
+          "risk": "LOW"
+        },
+        {
+          "name": "File Transfer Volume (file_docf_mean_file_nwords)",
+          "val": "410 words",
+          "baseline": "280 words avg",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-11422",
+      "user_id": "RWS0891",
+      "name": "R. W. Snyder",
+      "department": "Financial Compliance",
+      "workstation": "PC-0891",
+      "timestamp": "2010-12-30 19:15:20",
+      "is_afterhours": true,
+      "trigger": "Year-End Financial Audit Export",
+      "rf_prob": 0.24,
+      "xgb_prob": 0.27,
+      "cb_prob": 0.33,
+      "ensemble_prob": 0.275,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Year-End Close)",
+      "factors": [
+        {
+          "name": "Copied Documents (file_n_docf)",
+          "val": "35 files",
+          "baseline": "1.2 files avg",
+          "risk": "MEDIUM"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Evening Shift)",
+          "baseline": "Business Hours",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-14560",
+      "user_id": "TLM1502",
+      "name": "T. L. Mitchell",
+      "department": "Sales & Marketing",
+      "workstation": "PC-1502",
+      "timestamp": "2011-03-15 10:25:40",
+      "is_afterhours": false,
+      "trigger": "Partner Webinar Slide Deck Distribution",
+      "rf_prob": 0.19,
+      "xgb_prob": 0.23,
+      "cb_prob": 0.28,
+      "ensemble_prob": 0.228,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Marketing Blast)",
+      "factors": [
+        {
+          "name": "External Email Recipients (email_n_external)",
+          "val": "18 recipients",
+          "baseline": "0.2 / session",
+          "risk": "LOW"
+        },
+        {
+          "name": "Outbound Email Attachments (email_n_attach)",
+          "val": "4 attachments",
+          "baseline": "0.1 / session",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-18230",
+      "user_id": "DPR2190",
+      "name": "D. P. Richardson",
+      "department": "Software Engineering",
+      "workstation": "PC-2190",
+      "timestamp": "2010-11-05 14:10:00",
+      "is_afterhours": false,
+      "trigger": "Firmware Image Flash to USB Device",
+      "rf_prob": 0.21,
+      "xgb_prob": 0.26,
+      "cb_prob": 0.34,
+      "ensemble_prob": 0.262,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Hardware Testing)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "1 device",
+          "baseline": "0.01 / session",
+          "risk": "MEDIUM"
+        },
+        {
+          "name": "USB Connection Duration (usb_mean_usb_dur)",
+          "val": "220 sec",
+          "baseline": "35 sec avg",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-21405",
+      "user_id": "HLM0341",
+      "name": "H. L. Miller",
+      "department": "Talent Acquisition",
+      "workstation": "PC-0341",
+      "timestamp": "2011-02-18 11:40:15",
+      "is_afterhours": false,
+      "trigger": "Technical Job Boards Candidate Screening",
+      "rf_prob": 0.16,
+      "xgb_prob": 0.21,
+      "cb_prob": 0.29,
+      "ensemble_prob": 0.215,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Recruiting Duties)",
+      "factors": [
+        {
+          "name": "Job Search Browsing (http_n_jobf)",
+          "val": "28 visits",
+          "baseline": "0.1 visits/day",
+          "risk": "LOW"
+        },
+        {
+          "name": "Web Activity (http_n_http)",
+          "val": "310 requests",
+          "baseline": "45 requests",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-25910",
+      "user_id": "BND3419",
+      "name": "B. N. Daniels",
+      "department": "Legal & Contracts",
+      "workstation": "PC-3419",
+      "timestamp": "2010-09-22 17:50:30",
+      "is_afterhours": true,
+      "trigger": "Vendor Agreement PDF Batch Extraction",
+      "rf_prob": 0.25,
+      "xgb_prob": 0.29,
+      "cb_prob": 0.32,
+      "ensemble_prob": 0.284,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Contract Review)",
+      "factors": [
+        {
+          "name": "Copied Documents to Disk (file_docf_n-disk1)",
+          "val": "15 files",
+          "baseline": "0.05 files avg",
+          "risk": "LOW"
+        },
+        {
+          "name": "File Word Count (file_docf_mean_file_nwords)",
+          "val": "2,400 words",
+          "baseline": "280 words avg",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-28415",
+      "user_id": "SLK0912",
+      "name": "S. L. Kelly",
+      "department": "Quality Assurance",
+      "workstation": "PC-0912",
+      "timestamp": "2011-04-05 08:15:00",
+      "is_afterhours": false,
+      "trigger": "Performance Test Suite Run",
+      "rf_prob": 0.12,
+      "xgb_prob": 0.15,
+      "cb_prob": 0.18,
+      "ensemble_prob": 0.148,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Automated Test)",
+      "factors": [
+        {
+          "name": "Web Activity (http_n_http)",
+          "val": "580 requests",
+          "baseline": "45 requests",
+          "risk": "LOW"
+        },
+        {
+          "name": "Concurrent Host Logins (n_concurrent_sessions)",
+          "val": "1 host",
+          "baseline": "1 host",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-31045",
+      "user_id": "MCR2801",
+      "name": "M. C. Robinson",
+      "department": "Supply Chain & Logistics",
+      "workstation": "PC-2801",
+      "timestamp": "2010-12-14 16:30:45",
+      "is_afterhours": false,
+      "trigger": "Inventory Reconciliation Report",
+      "rf_prob": 0.14,
+      "xgb_prob": 0.17,
+      "cb_prob": 0.22,
+      "ensemble_prob": 0.172,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Inventory Audit)",
+      "factors": [
+        {
+          "name": "Document Word Count (file_docf_mean_file_nwords)",
+          "val": "1,890 words",
+          "baseline": "280 words avg",
+          "risk": "LOW"
+        },
+        {
+          "name": "Copied Documents (file_n_docf)",
+          "val": "8 files",
+          "baseline": "1.2 files avg",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-00512",
+      "user_id": "ACM2278",
+      "name": "A. C. Mercer",
+      "department": "System Administration",
+      "workstation": "PC-2278",
+      "timestamp": "2010-08-21 03:12:05",
+      "is_afterhours": true,
+      "trigger": "Weekend Mass File Copy to Removable Drive",
+      "rf_prob": 0.78,
+      "xgb_prob": 0.925,
+      "cb_prob": 0.895,
+      "ensemble_prob": 0.921,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 1 (USB Theft)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "8 devices",
+          "baseline": "0.01 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "USB Connection Duration (usb_mean_usb_dur)",
+          "val": "3,800 sec",
+          "baseline": "35 sec avg",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Saturday 03:12)",
+          "baseline": "Business Hours",
+          "risk": "HIGH"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-01380",
+      "user_id": "CMP2946",
+      "name": "C. M. Phelps",
+      "department": "Hardware Engineering",
+      "workstation": "PC-2946",
+      "timestamp": "2011-02-22 15:10:30",
+      "is_afterhours": false,
+      "trigger": "Anomalous Removable Media Insertion & Command Execution",
+      "rf_prob": 0.42,
+      "xgb_prob": 0.64,
+      "cb_prob": 0.88,
+      "ensemble_prob": 0.675,
+      "disposition": "Investigating",
+      "ground_truth": "Scenario 2 (Sabotage)",
+      "factors": [
+        {
+          "name": "Removable Storage Mounts (n_usb)",
+          "val": "3 devices",
+          "baseline": "0.01 / session",
+          "risk": "HIGH"
+        },
+        {
+          "name": "Job Search Activity (http_n_jobf)",
+          "val": "29 visits",
+          "baseline": "0.1 visits/day",
+          "risk": "HIGH"
+        },
+        {
+          "name": "URL Depth Variance (http_cloudf_mean_url_depth)",
+          "val": "4.1 levels",
+          "baseline": "1.8 levels",
+          "risk": "MEDIUM"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-03150",
+      "user_id": "CDE1846",
+      "name": "C. D. Edwards",
+      "department": "Corporate Strategy",
+      "workstation": "PC-1846",
+      "timestamp": "2011-04-21 16:55:12",
+      "is_afterhours": false,
+      "trigger": "Outbound Document Distribution to Personal Webmail",
+      "rf_prob": 0.85,
+      "xgb_prob": 0.94,
+      "cb_prob": 0.91,
+      "ensemble_prob": 0.942,
+      "disposition": "Escalated",
+      "ground_truth": "Scenario 4 (Email/Cloud Exfil)",
+      "factors": [
+        {
+          "name": "External Email Recipients (email_n_external)",
+          "val": "39 recipients",
+          "baseline": "0.2 / session",
+          "risk": "CRITICAL"
+        },
+        {
+          "name": "Outbound Email Attachments (email_n_attach)",
+          "val": "28 attachments",
+          "baseline": "0.1 / session",
+          "risk": "CRITICAL"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-34190",
+      "user_id": "JFW2201",
+      "name": "J. F. Wallace",
+      "department": "Executive Office",
+      "workstation": "PC-2201",
+      "timestamp": "2011-01-14 17:35:10",
+      "is_afterhours": false,
+      "trigger": "Board Presentation Review",
+      "rf_prob": 0.15,
+      "xgb_prob": 0.18,
+      "cb_prob": 0.24,
+      "ensemble_prob": 0.182,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Executive Briefing)",
+      "factors": [
+        {
+          "name": "Document Word Count (file_docf_mean_file_nwords)",
+          "val": "3,100 words",
+          "baseline": "280 words avg",
+          "risk": "LOW"
+        },
+        {
+          "name": "Copied Documents (file_n_docf)",
+          "val": "5 files",
+          "baseline": "1.2 files avg",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-37820",
+      "user_id": "PNW0452",
+      "name": "P. N. Washington",
+      "department": "Customer Operations",
+      "workstation": "PC-0452",
+      "timestamp": "2011-03-29 11:50:00",
+      "is_afterhours": false,
+      "trigger": "High Volume Support Ticket Attachments",
+      "rf_prob": 0.13,
+      "xgb_prob": 0.16,
+      "cb_prob": 0.21,
+      "ensemble_prob": 0.161,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Support Tickets)",
+      "factors": [
+        {
+          "name": "External Email Recipients (email_n_external)",
+          "val": "12 recipients",
+          "baseline": "0.2 / session",
+          "risk": "LOW"
+        },
+        {
+          "name": "Web Activity (http_n_http)",
+          "val": "290 requests",
+          "baseline": "45 requests",
+          "risk": "LOW"
+        }
+      ]
+    },
+    {
+      "id": "SES-62-40112",
+      "user_id": "GRB1990",
+      "name": "G. R. Bennett",
+      "department": "IT Infrastructure",
+      "workstation": "PC-1990",
+      "timestamp": "2010-10-04 22:15:00",
+      "is_afterhours": true,
+      "trigger": "Network Switch Firmware Rollout",
+      "rf_prob": 0.27,
+      "xgb_prob": 0.32,
+      "cb_prob": 0.37,
+      "ensemble_prob": 0.321,
+      "disposition": "Resolved",
+      "ground_truth": "Benign (Network Ops)",
+      "factors": [
+        {
+          "name": "Concurrent Host Logins (n_concurrent_sessions)",
+          "val": "2 hosts",
+          "baseline": "1 host",
+          "risk": "MEDIUM"
+        },
+        {
+          "name": "Session Timing (isworkhour)",
+          "val": "0 (Overtime Shift)",
+          "baseline": "Business Hours",
+          "risk": "LOW"
+        }
+      ]
+    }
   ]
 }

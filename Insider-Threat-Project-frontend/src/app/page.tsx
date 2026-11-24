@@ -15,7 +15,10 @@ import {
   Inbox,
   Filter,
   BarChart2,
-  ExternalLink
+  ExternalLink,
+  Award,
+  Zap,
+  Target
 } from "lucide-react";
 import {
   BarChart,
@@ -32,13 +35,16 @@ import triageData from "@/data/triage_queue.json";
 import SessionDrawer, { TriageSession } from "@/components/SessionDrawer";
 
 export default function OverviewPage() {
-  const { data, dataset } = useDataset();
+  const { data, dataset, benchmarks } = useDataset();
   const stats = data.dataset.stats;
   const models = data.models;
   const ensemble = models.Stacking_Ensemble.test_metrics_optimal_threshold;
 
   const [selectedSession, setSelectedSession] = useState<TriageSession | null>(null);
-  const queueSnippet: TriageSession[] = ((triageData as any)[dataset] || []).slice(0, 4);
+
+  const activeQueueKey = dataset === "cross_release" ? "r6.2" : dataset;
+  const queueSnippet: TriageSession[] = ((triageData as any)[activeQueueKey] || []).slice(0, 4);
+  const isCrossRelease = dataset === "cross_release";
 
   // Recharts 4-model comparison data
   const comparisonData = [
@@ -82,12 +88,23 @@ export default function OverviewPage() {
               Security Operations Command Center
             </h1>
             <span className="text-[11px] font-semibold uppercase px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
-              CERT {dataset} Active
+              {isCrossRelease ? "Cross-Release Tri-Benchmark" : `CERT ${dataset} Active`}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-1 max-w-2xl">
-            Enterprise User & Entity Behavior Analytics (UEBA) telemetry tracking {stats.employees.toLocaleString()} corporate accounts
-            across {stats.duration_months} continuous monitoring months ({stats.total_sessions.toLocaleString()} sessions).
+          <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
+            Enterprise User & Entity Behavior Analytics (UEBA) telemetry tracking{" "}
+            <span className="font-mono font-medium text-slate-800">
+              {stats.employees.toLocaleString()}
+            </span>{" "}
+            corporate accounts across{" "}
+            <span className="font-mono font-medium text-slate-800">
+              {stats.duration_months}
+            </span>{" "}
+            continuous monitoring months (
+            <span className="font-mono font-medium text-slate-800">
+              {stats.total_sessions.toLocaleString()}
+            </span>{" "}
+            sessions). Evaluated with zero-leakage cross-validation.
           </p>
         </div>
 
@@ -109,6 +126,42 @@ export default function OverviewPage() {
           </Link>
         </div>
       </div>
+
+      {/* Cross-Release Tri-Benchmark Banner (Rendered when cross_release is selected) */}
+      {isCrossRelease && (
+        <div className="enterprise-card p-5 border-l-4 border-l-indigo-600 bg-gradient-to-r from-white via-indigo-50/20 to-white space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Award className="w-4 h-4 text-indigo-600" />
+              <h2 className="text-sm font-bold text-slate-900">
+                Cross-Release Enterprise Benchmark Progression
+              </h2>
+            </div>
+            <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+              r4.2 → r5.2 → r6.2 Scalability
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+            {benchmarks.cross_release_summary.map((rel) => (
+              <div key={rel.release} className="p-3 rounded-lg border border-slate-200 bg-white space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-xs text-slate-900">{rel.name}</span>
+                  <span className="text-[10px] font-mono font-bold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded">
+                    PR-AUC {rel.best_pr_auc.toFixed(4)}
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-600 font-mono">
+                  {rel.employees.toLocaleString()} users · {rel.total_sessions.toLocaleString()} sessions
+                </div>
+                <div className="text-[10px] text-slate-500">
+                  Imbalance: <span className="font-semibold text-slate-700">{rel.threat_ratio}</span> · Peak RAM: <span className="font-semibold text-emerald-700">{rel.peak_ram}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* KPI Cards Grid (6 Clean Cards) */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
@@ -167,26 +220,26 @@ export default function OverviewPage() {
         {/* False Positive Rate */}
         <div className="enterprise-card p-3.5">
           <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            False Positive Rate
+            False Alarm Rate
           </div>
           <div className="mt-1 text-xl font-bold text-slate-900 font-mono tabular-nums">
             {(ensemble.false_positive_rate * 100).toFixed(4)}%
           </div>
           <div className="mt-0.5 text-[11px] text-slate-500">
-            {ensemble.confusion_matrix.fp} alarms in test
+            {ensemble.confusion_matrix.fp} alarms across test
           </div>
         </div>
 
         {/* Optimal Decision Threshold */}
         <div className="enterprise-card p-3.5">
           <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            Decision Threshold
+            Decision Cutoff
           </div>
           <div className="mt-1 text-xl font-bold text-slate-900 font-mono tabular-nums">
             T* = {ensemble.threshold}
           </div>
           <div className="mt-0.5 text-[11px] text-slate-500">
-            OOF calibrated
+            OOF F1 calibrated
           </div>
         </div>
       </div>
@@ -203,7 +256,8 @@ export default function OverviewPage() {
                   Model Efficacy Comparison (Untouched Test Partition)
                 </h2>
                 <p className="text-[11px] text-slate-500">
-                  Benchmarking Random Forest, XGBoost, CatBoost, and Stacking Ensemble on {stats.test_set_sessions.toLocaleString()} sessions.
+                  Benchmarking Random Forest, XGBoost, CatBoost, and Stacking Ensemble on{" "}
+                  {stats.test_set_sessions.toLocaleString()} sessions.
                 </p>
               </div>
 
@@ -278,7 +332,7 @@ export default function OverviewPage() {
                 href="/queue"
                 className="text-xs text-blue-700 hover:text-blue-800 font-medium flex items-center space-x-1"
               >
-                <span>View All ({triageData[dataset]?.length || 0})</span>
+                <span>View All ({((triageData as any)[activeQueueKey] || []).length})</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -300,7 +354,7 @@ export default function OverviewPage() {
                     <tr
                       key={s.id}
                       onClick={() => setSelectedSession(s)}
-                      className="cursor-pointer"
+                      className="cursor-pointer hover:bg-slate-50"
                     >
                       <td className="font-mono text-xs font-semibold text-blue-700">
                         {s.id}
@@ -334,7 +388,7 @@ export default function OverviewPage() {
                             e.stopPropagation();
                             setSelectedSession(s);
                           }}
-                          className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium"
+                          className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium cursor-pointer"
                         >
                           Inspect →
                         </button>
